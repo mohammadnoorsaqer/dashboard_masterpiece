@@ -1,0 +1,20 @@
+<?php
+
+namespace Database\Seeders;
+
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run()
+    {
+        \App\Models\Appointment::factory(10)->create();
+        \App\Models\BlogPost::factory(20)->create(); 
+        \App\Models\Review::factory(10)->create();
+    }
+    
+}
