@@ -15,6 +15,7 @@ class Article extends Model
         'image_url',
         'user_id',
     ];
+    protected $primaryKey = 'article_id';
 
     // Relationship with User (author)
     public function author()

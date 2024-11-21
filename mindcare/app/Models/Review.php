@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
-
+    protected $primaryKey = 'review_id';  // If your primary key is not 'id'
     protected $fillable = ['appointment_id', 'user_id', 'status', 'comments'];
     public function appointment()
     {
@@ -20,4 +20,5 @@ class Review extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
 }

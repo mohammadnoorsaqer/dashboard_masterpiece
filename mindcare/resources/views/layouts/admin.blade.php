@@ -83,13 +83,9 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="brand">
-                <a href="{{ route('admin.dashboard') }}" class="brand-logo">
-                    <i class="fas fa-brain"></i>
-                    <span>MindCare</span>
-                </a>
-            </div>
-            
+        <div class="text-white p-4">
+        <h4>MindCare</h4>
+        </div>
             <nav class="nav flex-column p-3">
                 <a class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}" 
                    href="{{ route('admin.dashboard') }}">
@@ -131,12 +127,6 @@
                    href="{{ route('admin.articles.index') }}">
                     <i class="fas fa-newspaper"></i>
                     <span>Articles</span>
-                </a>
-                
-                <a class="nav-link text-white {{ request()->routeIs('admin.blog-posts.*') ? 'active' : '' }}"
-                   href="{{ route('admin.blog-posts.index') }}">
-                    <i class="fas fa-blog"></i>
-                    <span>Blog Posts</span>
                 </a>
             </nav>
         </div>

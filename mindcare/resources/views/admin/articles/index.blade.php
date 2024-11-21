@@ -32,6 +32,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
+                        <th>ArticleImage</th> <!-- New header for the image -->
                         <th>Title</th>
                         <th>Author</th>
                         <th>Actions</th>
@@ -40,6 +41,14 @@
                 <tbody>
                     @foreach ($articles as $article)
                         <tr>
+                            <!-- Display the article's image -->
+                            <td>
+                                @if ($article->image_url)
+                                    <img src="{{ asset($article->image_url) }}" alt="{{ $article->title }}" class="img-thumbnail" style="width: 100px; height: auto;">
+                                @else
+                                    <span>No Image</span>
+                                @endif
+                            </td>
                             <td>{{ $article->title }}</td>
                             <td>{{ $article->author->name }}</td>
                             <td>

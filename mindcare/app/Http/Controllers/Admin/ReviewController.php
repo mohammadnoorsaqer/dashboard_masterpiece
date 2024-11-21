@@ -16,18 +16,24 @@ public function index()
 
 
     // Resolve or mark the review as unresolved
-    public function updateStatus(Request $request, Review $review)
-    {
-        $request->validate([
-            'status' => 'required|in:pending,resolved,irresolved',
-        ]);
+    public function update(Request $request, $review_id)
+{
+    $review = Review::findOrFail($review_id);
+
+    // Validate the incoming data
+    $request->validate([
+        'status' => 'required|in:pending,resolved,irresolved',
+    ]);
+
+    // Update the review's status
+    $review->status = $request->status;
+    $review->save();
+
+    // Return with success message
+    return back()->with('success', 'Review status updated successfully!');
+}
+
     
-        // Update the review's status
-        $review->update(['status' => $request->status]);
-    
-        // Redirect back to the reviews index page with a success message
-        return redirect()->route('admin.reviews.index')->with('success', 'Review status updated successfully!');
-    }
     
     
     

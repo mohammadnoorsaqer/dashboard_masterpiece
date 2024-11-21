@@ -8,7 +8,7 @@ class Coupon extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'coupon_id'; 
+    protected $primaryKey = 'id'; 
 
     protected $fillable = [
         'code',

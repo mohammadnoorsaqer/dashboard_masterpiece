@@ -1,31 +1,34 @@
 <?php
+
 namespace Database\Seeders;
 
-use App\Models\Review;
-use App\Models\Appointment;
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ReviewsTableSeeder extends Seeder
 {
     public function run()
     {
-        // Get some random appointments and users
-        $appointments = Appointment::all();
-        $users = User::all();
-
-        // Add some reviews for random appointments
-        foreach ($appointments as $appointment) {
-            // Pick a random user to leave a review
-            $user = $users->random();
-
-            // Create a review with 'pending' status
-            Review::create([
-                'appointment_id' => $appointment->appointment_id,
-                'user_id' => $user->user_id,
-                'status' => 'pending', // Start with a pending status
-                'comments' => 'This review is pending.', // Optional comment
-            ]);
-        }
+        // Insert data into the reviews table
+        DB::table('reviews')->insert([
+            [
+                'appointment_id' => 1, // Replace with an existing appointment ID
+                'user_id' => 1,        // Replace with an existing user ID
+                'status' => 'approved', // 'approved' or 'pending' (adjust as needed)
+                'comments' => 'Great service, very professional!', // Example comment
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ],
+            [
+                'appointment_id' => 2,
+                'user_id' => 2,
+                'status' => 'pending',
+                'comments' => 'It was okay, but there were delays.',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]
+            // Add more records as needed
+        ]);
     }
 }

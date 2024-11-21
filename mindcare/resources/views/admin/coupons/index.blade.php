@@ -40,9 +40,19 @@
                                 <td>{{ $coupon->valid_until }}</td>
                                 <td>{{ $coupon->status }}</td>
                                 <td>
+                                    <!-- Edit button -->
+                                    <a href="{{ route('admin.coupons.edit', $coupon->id) }}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </a>
 
-
-
+                                    <!-- Delete form -->
+                                    <form action="{{ route('admin.coupons.destroy', $coupon->id) }}" method="POST" class="d-inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this coupon?')">
+                                            <i class="fas fa-trash-alt"></i> Delete
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

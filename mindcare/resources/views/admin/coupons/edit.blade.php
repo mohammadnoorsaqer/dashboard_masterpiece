@@ -4,7 +4,7 @@
 <div class="container-fluid px-0">
     <h2 class="h3 mb-4">Edit Coupon</h2>
 
-    <form action="{{ route('admin.coupons.update', $coupon->coupon_id) }}" method="POST">
+    <form action="{{ route('admin.coupons.update', $coupon->id) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="mb-3">

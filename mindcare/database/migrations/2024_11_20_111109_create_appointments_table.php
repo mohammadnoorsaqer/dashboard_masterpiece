@@ -9,13 +9,13 @@ class CreateAppointmentsTable extends Migration
     public function up()
     {
         Schema::create('appointments', function (Blueprint $table) {
-            $table->id('appointment_id');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('doctor_id')->constrained()->onDelete('cascade');
-            $table->dateTime('appointment_date');
-            $table->enum('status', ['booked', 'completed', 'canceled'])->default('booked');
-            $table->text('notes')->nullable();
-            $table->timestamps();
+            $table->id('appointment_id'); // Primary key for the appointments table
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade'); // Referencing 'users' table
+            $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade'); // Assuming doctors are also stored in the 'users' table, otherwise specify the correct table
+            $table->dateTime('appointment_date'); // Date and time of the appointment
+            $table->enum('status', ['booked', 'completed', 'canceled'])->default('booked'); // Status of the appointment
+            $table->text('notes')->nullable(); // Optional notes
+            $table->timestamps(); // Created and updated timestamps
         });
     }
 
