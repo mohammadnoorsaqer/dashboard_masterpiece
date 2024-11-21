@@ -32,7 +32,7 @@
             <table class="table table-striped">
                 <thead>
                     <tr>
-                        <th>ArticleImage</th> <!-- New header for the image -->
+                        <th>Article Image</th>
                         <th>Title</th>
                         <th>Author</th>
                         <th>Actions</th>
@@ -41,7 +41,6 @@
                 <tbody>
                     @foreach ($articles as $article)
                         <tr>
-                            <!-- Display the article's image -->
                             <td>
                                 @if ($article->image_url)
                                     <img src="{{ asset($article->image_url) }}" alt="{{ $article->title }}" class="img-thumbnail" style="width: 100px; height: auto;">
@@ -58,6 +57,8 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                                 </form>
+                                <!-- Link to comments -->
+                                <a href="{{ route('admin.comments.show', $article->article_id) }}" class="btn btn-sm btn-info">View Comments</a>
                             </td>
                         </tr>
                     @endforeach

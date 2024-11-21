@@ -72,4 +72,18 @@ class ArticleController extends Controller
         $article->delete();
         return redirect()->route('admin.articles.index')->with('success', 'Article deleted successfully!');
     }
+    // Example in ArticleController or related controller
+
+public function show($id)
+{
+    // Fetch the article by ID
+    $article = Article::findOrFail($id);
+
+    // Fetch the comments for that article
+    $comments = $article->comments;  // Assuming there's a relationship defined
+
+    // Pass article and comments to the view
+    return view('admin.articles.comment', compact('article', 'comments'));
+}
+
 }

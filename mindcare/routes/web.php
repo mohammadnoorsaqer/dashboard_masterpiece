@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,8 +21,14 @@ use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
+use App\Http\Controllers\Admin\CommentController;
 Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard route
+
+    // Route to store a new comment
+    Route::post('admin/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('admin/articles/{articleId}/comments', [CommentController::class, 'show'])->name('comments.show');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Doctor Routes
@@ -56,7 +61,6 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
 
 
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -69,6 +73,31 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+Route::get('/home', function () {
+    return view('user.home');
+});
+
+Route::get('/about', function () {
+    return view('user.about');
+});
+
+Route::get('/doctors', function () {
+    return view('user.doctors');
+});
+Route::get('/services', function () {
+    return view('user.services');
+});
+Route::get('/pricing', function () {
+    return view('user.pricing');
+});
+
+Route::get('/articles', function () {
+    return view('user.articles');
+});
+
+Route::get('/contact', function () {
+    return view('user.contact');
 });
 
 require __DIR__.'/auth.php';
