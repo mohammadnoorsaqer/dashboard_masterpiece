@@ -40,6 +40,24 @@ class AppointmentController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment booked successfully!');
+        return redirect()->route('admin.appointments.index');
     }
+    public function updateStatus(Request $request, $id)
+    {
+        $appointment = Appointment::findOrFail($id);
+    
+        // Validate the status to ensure it is one of the allowed values
+        $request->validate([
+            'status' => 'required|in:booked,completed,canceled',
+        ]);
+    
+        // Update the status
+        $appointment->status = $request->status;
+        $appointment->save();
+    
+        // Return a success message
+        return redirect()->route('admin.appointments.index');
+    }
+    
 }
+

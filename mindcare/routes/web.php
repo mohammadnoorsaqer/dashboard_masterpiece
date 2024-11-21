@@ -34,7 +34,7 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     
     // Appointment Routes
     Route::resource('appointments', AppointmentController::class);
-    
+    Route::put('appointments/{id}/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
     // Article Routes
     Route::resource('articles', ArticleController::class);
     

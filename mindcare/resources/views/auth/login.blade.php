@@ -6,6 +6,9 @@
     <title>MindCare Admin - Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.js"></script>
+
     <style>
         body {
             background: #f8f9fa;
@@ -86,6 +89,8 @@
     </style>
 </head>
 <body>
+
+
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -175,6 +180,14 @@
                 toggleIcon.classList.add('fa-eye');
             }
         }
+        @if ($errors->any())
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '{{ implode(' ', $errors->all()) }}',
+                confirmButtonText: 'Ok'
+            });
+        @endif
     </script>
 </body>
 </html>

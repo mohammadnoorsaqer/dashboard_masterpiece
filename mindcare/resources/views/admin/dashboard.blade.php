@@ -127,7 +127,7 @@
                         <div class="card stat-card border-success">
                             <div class="card-body">
                                 <h6 class="card-title text-success">Active Users</h6>
-                                <h3 class="card-text">2,450</h3>
+                                <h3 class="card-text">{{$totalUsers}}</h3>
                             </div>
                         </div>
                     </div>
@@ -135,7 +135,7 @@
                         <div class="card stat-card border-warning">
                             <div class="card-body">
                                 <h6 class="card-title text-warning">Appointments</h6>
-                                <h3 class="card-text">485</h3>
+                                <h3 class="card-text">{{$totalAppoinments}}</h3>
                             </div>
                         </div>
                     </div>
@@ -143,7 +143,7 @@
                         <div class="card stat-card border-info">
                             <div class="card-body">
                                 <h6 class="card-title text-info">Reviews</h6>
-                                <h3 class="card-text">920</h3>
+                                <h3 class="card-text">{{$totalReviews}}</h3>
                             </div>
                         </div>
                     </div>

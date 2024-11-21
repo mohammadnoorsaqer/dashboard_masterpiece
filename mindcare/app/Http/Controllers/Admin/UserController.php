@@ -28,7 +28,16 @@ class UserController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'status' => 'required|in:active,inactive',
         ]);
-
+    
+        // Check if the email exists in inactive users
+        $existingUser = User::where('email', $validated['email'])->where('status', 'inactive')->first();
+    
+        if ($existingUser) {
+            // If the user is found as inactive, return an error message
+            return redirect()->route('admin.users.create')
+                             ->with('error', 'This email is associated with a deactivated account. Please contact support or use a different email.');
+        }
+    
         // Create the new user
         User::create([
             'name' => $validated['name'],
@@ -36,10 +45,10 @@ class UserController extends Controller
             'password' => bcrypt($validated['password']),
             'status' => $validated['status'],
         ]);
-
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+    
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully!');
     }
-
+    
     public function edit($id)
     {
         $user = User::findOrFail($id);
@@ -68,7 +77,7 @@ class UserController extends Controller
         $user->status = $validated['status'];
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+        return redirect()->route('admin.users.index');
     }
 
     public function destroy($id)
@@ -76,7 +85,7 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+        return redirect()->route('admin.users.index');
     }
 
     public function activate($id)
@@ -85,7 +94,7 @@ class UserController extends Controller
         $user->status = 'active';  // Or whatever activation logic you need
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'User activated successfully');
+        return redirect()->route('admin.users.index');
     }
 
     public function deactivate($id)
@@ -94,6 +103,6 @@ class UserController extends Controller
         $user->status = 'inactive';  // Deactivate the user
         $user->save();
 
-        return redirect()->route('admin.users.index')->with('success', 'User deactivated successfully');
+        return redirect()->route('admin.users.index');
     }
 }

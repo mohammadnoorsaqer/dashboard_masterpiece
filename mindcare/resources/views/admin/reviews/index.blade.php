@@ -30,7 +30,8 @@
                     <tbody>
                         @foreach($reviews as $review)
                             <tr>
-                                <td>{{ $review->user->name }}</td>
+                            <td>{{ $review->user ? $review->user->name : 'Guest' }}</td>
+
                                 <td>{{ $review->appointment->appointment_date }}</td>
                                 <td>{{ ucfirst($review->status) }}</td>
                                 <td>{{ $review->comments ?? 'No comments' }}</td> <!-- Display comments or 'No comments' if none exist -->
