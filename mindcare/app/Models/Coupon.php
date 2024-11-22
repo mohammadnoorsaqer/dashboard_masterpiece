@@ -17,4 +17,8 @@ class Coupon extends Model
         'valid_until',
         'status',
     ];
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
 }

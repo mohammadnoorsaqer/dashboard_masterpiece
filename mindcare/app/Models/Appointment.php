@@ -13,6 +13,9 @@ class Appointment extends Model
         'user_id',
         'doctor_id',
         'appointment_date',
+        'price',
+        'coupon_id',
+        'discount_amount',
         'status',
         'notes',
     ];
@@ -30,6 +33,10 @@ class Appointment extends Model
     public function reviews()
 {
     return $this->hasMany(Review::class);
+}
+public function coupon()
+{
+    return $this->belongsTo(Coupon::class);
 }
 
 }

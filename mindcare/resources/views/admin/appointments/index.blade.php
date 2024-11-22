@@ -13,6 +13,9 @@
                     <th>Doctor</th>
                     <th>Appointment Date</th>
                     <th>Status</th>
+                    <th>Price</th>
+                    <th>Discount</th>
+                    <th>Final Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,15 +29,26 @@
                             <form action="{{ route('admin.appointments.updateStatus', $appointment->id) }}" method="POST" id="status-form-{{ $appointment->id }}">
                                 @csrf
                                 @method('PUT')
-                                <select name="status" class="form-control" {{ $appointment->status == 'completed' || $appointment->status == 'canceled' ? 'disabled' : '' }} onchange="confirmStatusChange(event, {{ $appointment->id }})">
+                                <select name="status" class="form-control" 
+                                    {{ $appointment->status == 'completed' || $appointment->status == 'canceled' ? 'disabled' : '' }} 
+                                    onchange="confirmStatusChange(event, {{ $appointment->id }})">
                                     <option value="booked" {{ $appointment->status == 'booked' ? 'selected' : '' }}>Booked</option>
                                     <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Completed</option>
                                     <option value="canceled" {{ $appointment->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
                                 </select>
                             </form>
                         </td>
+                        <td>${{ number_format($appointment->price, 2) }}</td>
                         <td>
-                            <!-- No delete button, just status update -->
+                            @if($appointment->coupon)
+                                ${{ number_format($appointment->discount_amount, 2) }} 
+                                ({{ $appointment->coupon->code }})
+                            @else
+                                No Discount
+                            @endif
+                        </td>
+                        <td>
+                            ${{ number_format($appointment->price - $appointment->discount_amount, 2) }}
                         </td>
                     </tr>
                 @endforeach
