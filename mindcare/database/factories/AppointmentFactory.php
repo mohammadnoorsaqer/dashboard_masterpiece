@@ -18,6 +18,8 @@ class AppointmentFactory extends Factory
             'appointment_date' => $this->faker->dateTimeBetween('+1 week', '+1 month'),
             'status' => $this->faker->randomElement(['booked', 'completed', 'canceled']),
             'notes' => $this->faker->sentence,
+         'price' => $this->faker->randomFloat(2, 10, 1000),
+
         ];
     }
 }

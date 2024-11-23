@@ -18,8 +18,20 @@ class DashboardController extends Controller
         $totalDoctors = Doctor::count();
         $totalUsers=User::count();
         $totalAppoinments=Appointment::count();
+        $completedCount = Appointment::where('status', 'completed')->count();
+        $bookedCount = Appointment::where('status', 'booked')->count();
+        $canceledCount = Appointment::where('status', 'canceled')->count();
+        $completedRevenue = Appointment::where('status', 'completed')->sum('price');
+        $bookedRevenue = Appointment::where('status', 'booked')->sum('price');
         $totalReviews=Review::count();
-        return view('admin.dashboard', compact('totalDoctors','totalUsers','totalAppoinments','totalReviews'));
+        $appointments = Appointment::with(['user', 'doctor'])
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+        return view('admin.dashboard', compact('totalDoctors','totalUsers','totalAppoinments','totalReviews','appointments',   'completedCount',
+        'bookedCount',
+        'canceledCount',    'completedRevenue',
+        'bookedRevenue'));
     }
     
 }

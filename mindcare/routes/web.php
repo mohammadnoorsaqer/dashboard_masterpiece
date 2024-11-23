@@ -57,6 +57,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::post('manageadmins', [ManageAdminsController::class, 'store'])->name('manageadmins.store');
     Route::get('manageadmins/{id}/edit', [ManageAdminsController::class, 'edit'])->name('manageadmins.edit');
     Route::put('manageadmins/{id}', [ManageAdminsController::class, 'update'])->name('manageadmins.update');
+    Route::delete('manageadmins/{id}', [ManageAdminsController::class, 'destroy'])->name('manageadmins.destroy');
+
 });
 
 

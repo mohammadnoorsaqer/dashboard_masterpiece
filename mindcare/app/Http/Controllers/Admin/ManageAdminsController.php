@@ -78,4 +78,21 @@ class ManageAdminsController extends Controller
         // Redirect to the admin management page with success message
         return redirect()->route('admin.manageadmins.index')->with('success', 'Admin updated successfully!');
     }
+    public function destroy($id)
+{
+    // Find the admin by id
+    $admin = User::findOrFail($id);
+
+    // Ensure the admin being deleted is not the currently authenticated user
+    if ($admin->id == auth()->id()) {
+        return redirect()->route('admin.manageadmins.index')->with('error', 'You cannot delete your own account.');
+    }
+
+    // Delete the admin
+    $admin->delete();
+
+    // Redirect back with success message
+    return redirect()->route('admin.manageadmins.index')->with('success', 'Admin deleted successfully!');
+}
+
 }

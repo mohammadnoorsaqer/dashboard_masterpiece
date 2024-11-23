@@ -37,6 +37,63 @@
             justify-content: center;
             background: #f8f9fa;
         }
+        .charts-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 16px;
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+}
+
+.chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+}
+
+.chart-card .card-header {
+    padding: 16px 24px;
+    background: white;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    border-radius: 16px 16px 0 0;
+}
+
+.chart-card .card-header h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2C3E50;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.chart-card .card-header h5 i {
+    font-size: 1.1rem;
+    opacity: 0.8;
+}
+
+.chart-card .card-body {
+    padding: 16px;
+    height: 300px;
+}
+
+.chart-card .chart-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+@media (max-width: 992px) {
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+}
     </style>
 </head>
 <body>
@@ -154,91 +211,118 @@
         </div>
     </div>
 </div>
-
-                <!-- Recent Appointments Table -->
-                <div class="card shadow-sm mb-4">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title mb-0">Recent Appointments</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Patient</th>
-                                        <th>Doctor</th>
-                                        <th>Date</th>
-                                        <th>Time</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>John Doe</td>
-                                        <td>Dr. Smith</td>
-                                        <td>2024-11-20</td>
-                                        <td>10:00 AM</td>
-                                        <td><span class="badge bg-success">Confirmed</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Jane Smith</td>
-                                        <td>Dr. Johnson</td>
-                                        <td>2024-11-20</td>
-                                        <td>11:30 AM</td>
-                                        <td><span class="badge bg-warning">Pending</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Active Coupons -->
-                <div class="card shadow-sm">
-                    <div class="card-header bg-white">
-                        <h5 class="card-title mb-0">Active Coupons</h5>
-                    </div>
-                    <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>Code</th>
-                                        <th>Discount</th>
-                                        <th>Valid Until</th>
-                                        <th>Status</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>NEWUSER20</td>
-                                        <td>20%</td>
-                                        <td>2024-12-31</td>
-                                        <td><span class="badge bg-success">Active</span></td>
-                                        <td>
-                                            <button class="btn btn-sm btn-primary"><i class="fas fa-edit"></i></button>
-                                            <button class="btn btn-sm btn-danger"><i class="fas fa-trash"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
+<div class="charts-row">
+    <div class="chart-card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-calendar-check"></i>
+                Appointments Overview
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="appointmentsChart"></canvas>
             </div>
         </div>
     </div>
 
+    <div class="chart-card">
+        <div class="card-header">
+            <h5 class="card-title mb-0">
+                <i class="fas fa-chart-line"></i>
+                Revenue Overview
+            </h5>
+        </div>
+        <div class="card-body">
+            <div class="chart-container">
+                <canvas id="revenueChart"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Appointments by Status Chart
+        const ctxAppointments = document.getElementById('appointmentsChart').getContext('2d');
+        const appointmentsChart = new Chart(ctxAppointments, {
+            type: 'bar', // Change this to 'doughnut' or 'pie' for a different style
+            data: {
+                labels: ['Completed', 'Booked', 'Canceled'], // Status labels
+                datasets: [{
+                    label: 'Appointments by Status',
+                    data: [{{ $completedCount }}, {{ $bookedCount }}, {{ $canceledCount }}], // Data values dynamically passed
+                    backgroundColor: [
+                        '#28a745', // Green for Completed
+                        '#007bff', // Blue for Booked
+                        '#dc3545'  // Red for Canceled
+                    ],
+                    borderColor: [
+                        '#28a745',
+                        '#007bff',
+                        '#dc3545'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Appointments'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Revenue Chart for Completed & Booked Appointments
+        const ctxRevenue = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctxRevenue, {
+            type: 'bar', // Use doughnut or pie chart for revenues
+            data: {
+                labels: ['Completed Revenue', 'Booked Revenue'], // Categories
+                datasets: [{
+                    label: 'Revenue in USD',
+                    data: [{{ $completedRevenue }}, {{ $bookedRevenue }}], // Revenue values dynamically passed
+                    backgroundColor: [
+                        '#28a745', // Green for Completed Revenue
+                        '#007bff'  // Blue for Booked Revenue
+                    ],
+                    borderColor: [
+                        '#28a745',
+                        '#007bff'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top',
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+
+
 </body>
+
 </html>
