@@ -9,10 +9,10 @@ class UserController extends Controller
 {
     public function index()
     {
-        // Get all users with pagination
-        $users = User::paginate(10); // Adjust the number based on how many users you want per page
+        $users = User::where('role', 0)->paginate(10);  // Fetch only users with role 0 (normal users)
         return view('admin.users.index', compact('users'));
     }
+    
 
     public function create()
     {

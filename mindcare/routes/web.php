@@ -19,16 +19,12 @@ use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\ManageAdminsController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
 use App\Http\Controllers\Admin\CommentController;
-Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard route
-
-    // Route to store a new comment
-    Route::post('admin/comments', [CommentController::class, 'store'])->name('comments.store');
-    Route::get('admin/articles/{articleId}/comments', [CommentController::class, 'show'])->name('comments.show');
-
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     // Doctor Routes
@@ -40,13 +36,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     // Appointment Routes
     Route::resource('appointments', AppointmentController::class);
     Route::put('appointments/{id}/update-status', [AppointmentController::class, 'updateStatus'])->name('appointments.updateStatus');
+    
     // Article Routes
     Route::resource('articles', ArticleController::class);
     
     // Review Routes
     Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews.index');
     Route::put('/reviews/{review_id}', [ReviewController::class, 'update'])->name('reviews.update');
-    
     // User Routes
     Route::get('users', [UserController::class, 'index'])->name('users.index');
     Route::get('users/create', [UserController::class, 'create'])->name('users.create');
@@ -56,7 +52,13 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     Route::delete('users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('users/{id}/activate', [UserController::class, 'activate'])->name('users.activate');
     Route::put('users/{id}/deactivate', [UserController::class, 'deactivate'])->name('users.deactivate');
+    Route::get('manageadmins', [ManageAdminsController::class, 'index'])->name('manageadmins.index');
+    Route::get('manageadmins/create', [ManageAdminsController::class, 'create'])->name('manageadmins.create');
+    Route::post('manageadmins', [ManageAdminsController::class, 'store'])->name('manageadmins.store');
+    Route::get('manageadmins/{id}/edit', [ManageAdminsController::class, 'edit'])->name('manageadmins.edit');
+    Route::put('manageadmins/{id}', [ManageAdminsController::class, 'update'])->name('manageadmins.update');
 });
+
 
 
 

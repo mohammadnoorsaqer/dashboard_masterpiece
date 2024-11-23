@@ -12,6 +12,11 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    // Role constants
+    const ROLE_USER = 0;
+    const ROLE_ADMIN = 1;
+    const ROLE_SUPER_ADMIN = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -21,7 +26,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'status',
+        'role', // Add 'role' to the mass-assignable attributes
     ];
 
     /**
@@ -44,4 +49,27 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * Check if the user is a normal user.
+     */
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
+
+    /**
+     * Check if the user is an admin.
+     */
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    /**
+     * Check if the user is a super admin.
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === self::ROLE_SUPER_ADMIN;
+    }
 }
