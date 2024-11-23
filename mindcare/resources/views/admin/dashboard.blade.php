@@ -112,42 +112,48 @@
                     </div>
                 </nav>
 
-                <!-- Stats Cards -->
-                <div class="row mb-4">
-                <div class="col-md-3">
-    <div class="card stat-card border-primary">
-        <div class="card-body">
-            <h6 class="card-title text-primary">Total Doctors</h6>
-            <h3 class="card-text">{{ $totalDoctors }}</h3>  <!-- Display the dynamic total number of doctors -->
+         <!-- Stats Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card border-primary">
+            <div class="card-body text-center">
+                <i class="fas fa-user-md text-primary fa-3x mb-3"></i> <!-- Doctor Icon -->
+                <h6 class="card-title text-primary">Total Doctors</h6>
+                <h3 class="card-text">{{ $totalDoctors }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card border-success">
+            <div class="card-body text-center">
+                <i class="fas fa-users text-success fa-3x mb-3"></i> <!-- Active Users Icon -->
+                <h6 class="card-title text-success">Active Users</h6>
+                <h3 class="card-text">{{ $totalUsers }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card border-warning">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-check text-warning fa-3x mb-3"></i> <!-- Appointment Icon -->
+                <h6 class="card-title text-warning">Appointments</h6>
+                <h3 class="card-text">{{ $totalAppoinments }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card stat-card border-info">
+            <div class="card-body text-center">
+                <i class="fas fa-star text-info fa-3x mb-3"></i> <!-- Reviews Icon -->
+                <h6 class="card-title text-info">Reviews</h6>
+                <h3 class="card-text">{{ $totalReviews }}</h3>
+            </div>
         </div>
     </div>
 </div>
-
-                    <div class="col-md-3">
-                        <div class="card stat-card border-success">
-                            <div class="card-body">
-                                <h6 class="card-title text-success">Active Users</h6>
-                                <h3 class="card-text">{{$totalUsers}}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card stat-card border-warning">
-                            <div class="card-body">
-                                <h6 class="card-title text-warning">Appointments</h6>
-                                <h3 class="card-text">{{$totalAppoinments}}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card stat-card border-info">
-                            <div class="card-body">
-                                <h6 class="card-title text-info">Reviews</h6>
-                                <h3 class="card-text">{{$totalReviews}}</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
                 <!-- Recent Appointments Table -->
                 <div class="card shadow-sm mb-4">
