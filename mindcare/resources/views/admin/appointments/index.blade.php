@@ -40,13 +40,15 @@
                         </td>
                         <td>${{ number_format($appointment->price, 2) }}</td>
                         <td>
-                            @if($appointment->coupon)
-                                ${{ number_format($appointment->discount_amount, 2) }} 
-                                ({{ $appointment->coupon->code }})
-                            @else
-                                No Discount
-                            @endif
-                        </td>
+    @if($appointment->coupon && $appointment->discount_amount > 0)
+        ${{ number_format($appointment->discount_amount, 2) }} 
+        ({{ $appointment->coupon->code }})
+    @else
+        No Discount
+    @endif
+</td>
+
+
                         <td>
                             ${{ number_format($appointment->price - $appointment->discount_amount, 2) }}
                         </td>

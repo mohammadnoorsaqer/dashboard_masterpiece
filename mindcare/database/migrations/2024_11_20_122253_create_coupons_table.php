@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('code')->unique();
             $table->integer('discount_percentage');
             $table->date('valid_from');
-            $table->date('valid_until');
+            $table->date(column: 'valid_until');
             $table->enum('status', ['active', 'expired'])->default('active');
             $table->timestamps();
         });
