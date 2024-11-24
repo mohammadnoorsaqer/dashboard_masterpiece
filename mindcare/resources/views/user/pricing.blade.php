@@ -44,60 +44,79 @@
 </section>
 <!-- Booking Modal -->
 <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-md"> <!-- Set to medium modal for slightly bigger size -->
         <div class="modal-content">
             <form action="{{ route('user.bookAppointment') }}" method="POST">
                 @csrf
-                <div class="form-group">
-                    <label for="price">Price</label>
-                    <input type="number" class="form-control" id="price" name="price" value="100" readonly>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="bookModalLabel">Book Your Appointment</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
+                
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label for="price">Price</label>
+                        <input type="number" class="form-control" id="price" name="price" value="100" readonly>
+                    </div>
 
-                <div class="form-group">
-                    <label for="coupon_code">Coupon Code</label>
-                    <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
-                    <button type="button" class="btn btn-info" id="apply-coupon">Apply Coupon</button>
+                    <div class="form-group mb-3">
+                        <label for="coupon_code">Coupon Code</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
+                            <button type="button" class="btn btn-primary" id="apply-coupon">Apply</button> <!-- Change to btn-primary -->
+                        </div>
+                    </div>
+
+                    <!-- Notification for coupon application -->
+                    <div id="coupon-notification" class="alert alert-success mt-3" style="display: none;">
+                        Coupon applied successfully! Discount: $<span id="discount-amount"></span>
+                        <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove Coupon</button>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="discount_amount">Discount Amount</label>
+                        <input type="number" class="form-control" id="discount_amount" name="discount_amount" readonly>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="appointment_date">Appointment Date</label>
+                        <input type="datetime-local" class="form-control" id="appointment_date" name="appointment_date" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="notes">Notes</label>
+                        <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
+                    </div>
                 </div>
-
-                <!-- Notification for coupon application -->
-                <div id="coupon-notification" class="alert alert-success mt-3" style="display: none;">
-                    Coupon applied successfully! Discount: $<span id="discount-amount"></span>
-                    <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove Coupon</button>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary w-100">Book Now</button>
                 </div>
-
-                <div class="form-group">
-                    <label for="discount_amount">Discount Amount</label>
-                    <input type="number" class="form-control" id="discount_amount" name="discount_amount" readonly>
-                </div>
-
-                <div class="form-group">
-                    <label for="appointment_date">Appointment Date</label>
-                    <input type="datetime-local" class="form-control" id="appointment_date" name="appointment_date" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="notes">Notes</label>
-                    <textarea class="form-control" id="notes" name="notes" rows="3"></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Book Now</button>
             </form>
         </div>
     </div>
 </div>
 
+
 <script>
-    // Populate Modal with Price Data
-    document.querySelectorAll('[data-bs-target="#bookModal"]').forEach(button => {
-        button.addEventListener('click', event => {
-            const modal = document.querySelector('#bookModal');
-            const price = button.getAttribute('data-price');
-            modal.querySelector('#price').value = price;
-            modal.querySelector('#discount_amount').value = 0; // Reset discount
-            document.getElementById('coupon-notification').style.display = 'none'; // Hide notification on modal open
-            document.getElementById('apply-coupon').style.display = 'inline-block'; // Show apply button when modal is opened
-        });
+// Populate Modal with Price Data
+document.querySelectorAll('[data-bs-target="#bookModal"]').forEach(button => {
+    button.addEventListener('click', event => {
+        const modal = document.querySelector('#bookModal');
+        const price = button.getAttribute('data-price');
+        const plan = button.getAttribute('data-plan');
+        
+        // Set the modal input with the price and save the original price
+        modal.querySelector('#price').value = price;
+        modal.querySelector('#price').setAttribute('data-original-price', price);
+        modal.querySelector('#discount_amount').value = 0; // Reset discount
+        
+        document.getElementById('coupon-notification').style.display = 'none'; // Hide notification on modal open
+        document.getElementById('apply-coupon').style.display = 'inline-block'; // Show apply button when modal is opened
     });
+});
 
 // Apply Coupon
 document.getElementById('apply-coupon').addEventListener('click', function() {
@@ -155,8 +174,8 @@ document.getElementById('apply-coupon').addEventListener('click', function() {
 
 // Remove Coupon
 document.getElementById('remove-coupon').addEventListener('click', function() {
-    const price = parseFloat(document.getElementById('price').value);
-    const originalPrice = 100; // Assuming 100 is the original price before any discount
+    // Get the original price dynamically from the modal input
+    const originalPrice = parseFloat(document.querySelector('#price').getAttribute('data-original-price'));
 
     // Reset the price and discount
     document.getElementById('price').value = originalPrice.toFixed(2);
