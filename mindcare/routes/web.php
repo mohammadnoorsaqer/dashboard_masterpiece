@@ -20,6 +20,9 @@ use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\ReviewController;
 use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ManageAdminsController;
+use App\Http\Controllers\UserAppointmentController;
+use App\Http\Controllers\UserCouponController;
+
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
 use App\Http\Controllers\Admin\CommentController;
@@ -97,11 +100,13 @@ Route::get('/services', function () {
 Route::get('/pricing', function () {
     return view('user.pricing');
 });
+Route::post('/book-appointment', [UserAppointmentController::class, 'bookAppointment'])->name('user.bookAppointment');
+
+Route::get('/check-coupon', [UserCouponController::class, 'checkCoupon']);
 
 Route::get('/articles', function () {
     return view('user.articles');
 });
-
 Route::get('/contact', function () {
     return view('user.contact');
 });
