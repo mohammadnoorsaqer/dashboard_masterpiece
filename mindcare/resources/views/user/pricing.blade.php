@@ -113,8 +113,9 @@ document.querySelectorAll('[data-bs-target="#bookModal"]').forEach(button => {
         modal.querySelector('#price').setAttribute('data-original-price', price);
         modal.querySelector('#discount_amount').value = 0; // Reset discount
         
-        document.getElementById('coupon-notification').style.display = 'none'; // Hide notification on modal open
-        document.getElementById('apply-coupon').style.display = 'inline-block'; // Show apply button when modal is opened
+        // Reset the coupon notification
+        document.getElementById('coupon-notification').style.display = 'none';
+        document.getElementById('apply-coupon').style.display = 'inline-block'; // Show apply button
     });
 });
 
@@ -122,6 +123,7 @@ document.querySelectorAll('[data-bs-target="#bookModal"]').forEach(button => {
 document.getElementById('apply-coupon').addEventListener('click', function() {
     const couponCode = document.getElementById('coupon_code').value;
     const price = parseFloat(document.getElementById('price').value);
+    const originalPrice = parseFloat(document.querySelector('#price').getAttribute('data-original-price'));
 
     // Make an AJAX request to check if the coupon is valid
     fetch(`/check-coupon?coupon_code=${couponCode}`)
@@ -130,8 +132,8 @@ document.getElementById('apply-coupon').addEventListener('click', function() {
             if (data.success) {
                 // Coupon is valid, apply discount
                 const discountPercentage = data.discount_percentage / 100; // Convert to decimal
-                const discountAmount = price * discountPercentage;
-                const finalPrice = price - discountAmount;
+                const discountAmount = originalPrice * discountPercentage; // Use original price to calculate discount
+                const finalPrice = originalPrice - discountAmount;
 
                 // Update the discount and price
                 document.getElementById('discount_amount').value = discountAmount.toFixed(2);
@@ -196,6 +198,7 @@ document.getElementById('remove-coupon').addEventListener('click', function() {
         confirmButtonText: 'OK'
     });
 });
+
 
 </script>
 

@@ -24,10 +24,14 @@
         <a class="nav-link" href="{{ route('admin.articles.index') }}">
             <i class="fas fa-file-alt me-2"></i> Articles
         </a>
+            <a class="nav-link" href="{{ route('admin.contacts.index') }}">
+            <i class="fas fa-envelope me-2"></i> Contact Us
+        </a>
         @if(Auth::user()->role == 2)
             <a class="nav-link" href="{{ route('admin.manageadmins.index') }}">
                 <i class="fas fa-user-shield me-2"></i> Manage Admins
             </a>
         @endif
+        
     </nav>
 </div>

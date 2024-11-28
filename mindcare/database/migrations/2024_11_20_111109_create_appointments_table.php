@@ -13,6 +13,7 @@ class CreateAppointmentsTable extends Migration
             $table->foreignId('doctor_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('appointment_date');
             $table->enum('status', ['booked', 'completed', 'canceled'])->default('booked');
+            $table->decimal('original_price', 8, 2)->nullable();  // Add this column
             $table->decimal('price', 10, 2); // Price of the appointment
             $table->foreignId('coupon_id')->nullable()->constrained('coupons')->onDelete('set null'); // Applied coupon
             $table->decimal('discount_amount', 10, 2)->nullable(); // Discount amount applied

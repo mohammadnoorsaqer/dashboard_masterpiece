@@ -37,12 +37,11 @@ class UserAppointmentController extends Controller
         if ($coupon) {
             $discountAmount = ($validated['price'] * $coupon->discount_percentage) / 100;
         }
-
+        
         // Ensure the discount doesn't exceed the original price
         $discountAmount = min($discountAmount, $validated['price']);
-
-        // Calculate final price (price - discount)
         $finalPrice = $validated['price'] - $discountAmount;
+        
 
         // Create the appointment record
         $appointment = new Appointment();

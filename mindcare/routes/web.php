@@ -22,6 +22,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ManageAdminsController;
 use App\Http\Controllers\UserAppointmentController;
 use App\Http\Controllers\UserCouponController;
+use App\Http\Controllers\ContactController;
 
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
@@ -34,7 +35,11 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('admin/articles/{articleId}/comments', [CommentController::class, 'show'])->name('comments.show');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+    //conctacts
+    Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index'); // Contact page
+    Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store'); // Store contact form (if you plan to have form submissions)
+
+
     // Doctor Routes
     Route::resource('doctors', DoctorController::class);
     
@@ -110,5 +115,7 @@ Route::get('/articles', function () {
 Route::get('/contact', function () {
     return view('user.contact');
 });
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
 
 require __DIR__.'/auth.php';

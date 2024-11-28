@@ -65,40 +65,42 @@
 								<div class="col-md-7">
 									<div class="contact-wrap w-100 p-md-5 p-4">
 										<h3 class="mb-4">Contact Us</h3>
-										<form method="POST" id="contactForm" name="contactForm" class="contactForm">
-											<div class="row">
-												<div class="col-md-6">
-													<div class="form-group">
-														<label class="label" for="name">Full Name</label>
-														<input type="text" class="form-control" name="name" id="name" placeholder="Name">
-													</div>
-												</div>
-												<div class="col-md-6"> 
-													<div class="form-group">
-														<label class="label" for="email">Email Address</label>
-														<input type="email" class="form-control" name="email" id="email" placeholder="Email">
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="form-group">
-														<label class="label" for="subject">Subject</label>
-														<input type="text" class="form-control" name="subject" id="subject" placeholder="Subject">
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="form-group">
-														<label class="label" for="#">Message</label>
-														<textarea name="message" class="form-control" id="message" cols="30" rows="4" placeholder="Message"></textarea>
-													</div>
-												</div>
-												<div class="col-md-12">
-													<div class="form-group">
-														<input type="submit" value="Send Message" class="btn btn-primary">
-														<div class="submitting"></div>
-													</div>
-												</div>
-											</div>
-										</form>
+										<form method="POST" action="{{ route('contact.store') }}" id="contactForm" name="contactForm" class="contactForm">
+    @csrf
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="label" for="name">Full Name</label>
+                <input type="text" class="form-control" name="name" id="name" placeholder="Name" required>
+            </div>
+        </div>
+        <div class="col-md-6"> 
+            <div class="form-group">
+                <label class="label" for="email">Email Address</label>
+                <input type="email" class="form-control" name="email" id="email" placeholder="Email" required>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="label" for="subject">Subject</label>
+                <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject" required>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label class="label" for="#">Message</label>
+                <textarea name="message" class="form-control" id="message" cols="30" rows="4" placeholder="Message" required></textarea>
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <input type="submit" value="Send Message" class="btn btn-primary">
+                <div class="submitting"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
 									</div>
 								</div>
 								<div class="col-md-5 order-md-first d-flex align-items-stretch">
