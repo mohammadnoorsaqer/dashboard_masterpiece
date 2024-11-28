@@ -49,6 +49,7 @@ class UserAppointmentController extends Controller
         $appointment->doctor_id = 1; // Example doctor ID, change as per your logic
         $appointment->appointment_date = $validated['appointment_date'];
         $appointment->notes = $validated['notes'];
+        $appointment->original_price = $request->original_price;
         $appointment->price = $validated['price'];
         $appointment->discount_amount = $discountAmount;
         // No final_price column, so only save price and discount_amount

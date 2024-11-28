@@ -38,6 +38,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     //conctacts
     Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index'); // Contact page
     Route::post('/contacts', [ContactController::class, 'store'])->name('contacts.store'); // Store contact form (if you plan to have form submissions)
+    Route::put('contacts/{contact}/status', [ContactController::class, 'updateStatus'])->name('contacts.updateStatus');
 
 
     // Doctor Routes

@@ -53,7 +53,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <p class="mb-0" style="color: rgba(255,255,255,.5);">
-                        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart color-danger" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib.com</a>
+                        Copyright &copy;<script>document.write(new Date().getFullYear());</script>Made With <i class="fa fa-heart color-danger" aria-hidden="true"></i> by <a href="# target="_blank">MindCare</a>
                     </p>
                 </div>
             </div>

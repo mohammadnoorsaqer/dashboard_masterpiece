@@ -128,6 +128,12 @@
                     <i class="fas fa-newspaper"></i>
                     <span>Articles</span>
                 </a>
+                 
+                <a class="nav-link text-white {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}"
+                   href="{{ route('admin.contacts.index') }}">
+                   <i class="fas fa-envelope me-2"></i>
+                    <span>Contcats</span>
+                </a>
             </nav>
         </div>
 
