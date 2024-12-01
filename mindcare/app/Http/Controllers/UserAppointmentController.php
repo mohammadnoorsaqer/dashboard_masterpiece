@@ -1,63 +1,83 @@
 <?php
+// UserAppointmentController.php
+
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Package;
+use App\Models\Doctor;
 use App\Models\Coupon;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-
 class UserAppointmentController extends Controller
 {
-    public function bookAppointment(Request $request)
+    public function index()
     {
-        // Validate input data
+        // Fetch packages for pricing (assuming a Package model exists)
+        $packages = Package::all();
+
+        // Fetch doctors (if you want to display available doctors for the user to choose from)
+        $doctors = Doctor::all();
+
+        // Pass the data to the view
+        return view('user.pricing', compact('packages', 'doctors'));
+    }
+    public function store(Request $request)
+    {
+        // Validate the incoming request data
         $validated = $request->validate([
+            'user_id' => 'required|exists:users,id',  // Ensure the user exists
+            'doctor_id' => 'required|exists:doctors,id',  // Ensure doctor exists
+            'appointment_date' => 'required|date|after:today',  // Ensure valid future appointment date
             'price' => 'required|numeric',
-            'appointment_date' => 'required|date',
             'notes' => 'nullable|string',
-            'coupon_code' => 'nullable|string|exists:coupons,code', // Coupon code must exist in the database
+            'coupon_code' => 'nullable|string'  // Coupon code is optional
         ]);
-
-        // Fetch coupon if exists and validate it
+        
+        // Initialize coupon-related variables
         $coupon = null;
-        if ($request->coupon_code) {
-            $coupon = Coupon::where('code', $request->coupon_code)
-                            ->where('status', 1) // Ensure coupon is active
-                            ->where('valid_from', '<=', Carbon::now()) // Coupon valid from this date
-                            ->where('valid_until', '>=', Carbon::now()) // Coupon valid until this date
-                            ->first();
-
-            if (!$coupon) {
-                return back()->withErrors(['coupon_code' => 'Invalid or expired coupon code.']);
+        $discountAmount = 0;
+    
+        // Check if a coupon code was applied
+        if ($request->has('coupon_code') && !empty($request->coupon_code)) {
+            // Get the coupon by code
+            $coupon = Coupon::where('code', $request->coupon_code)->first();
+    
+            // If coupon exists and is active, and within the valid date range
+            if ($coupon && $coupon->status == 'active' && Carbon::now()->between($coupon->valid_from, $coupon->valid_until)) {
+                // Calculate discount based on coupon percentage
+                $discountAmount = ($coupon->discount_percentage / 100) * $request->price;
+            } else {
+                // Invalid coupon, return an error
+                return redirect()->route('user.pricing')->with('error', 'Invalid or expired coupon code');
             }
         }
-
-        // Calculate discount amount (if coupon exists)
-        $discountAmount = 0;
-        if ($coupon) {
-            $discountAmount = ($validated['price'] * $coupon->discount_percentage) / 100;
-        }
-        
-        // Ensure the discount doesn't exceed the original price
-        $discountAmount = min($discountAmount, $validated['price']);
-        $finalPrice = $validated['price'] - $discountAmount;
-        
-
-        // Create the appointment record
+    
+        // Calculate final price after applying discount
+        $finalPrice = $request->price - $discountAmount;
+    
+        // Create a new appointment record
         $appointment = new Appointment();
-        $appointment->user_id = auth()->user()->id; // Assuming user is logged in
-        $appointment->doctor_id = 1; // Example doctor ID, change as per your logic
-        $appointment->appointment_date = $validated['appointment_date'];
-        $appointment->notes = $validated['notes'];
-        $appointment->original_price = $request->original_price;
-        $appointment->price = $validated['price'];
-        $appointment->discount_amount = $discountAmount;
-        // No final_price column, so only save price and discount_amount
-        $appointment->coupon_id = $coupon ? $coupon->id : null;
-
+        $appointment->user_id = $request->user_id;
+        $appointment->doctor_id = $request->doctor_id;  // Store the selected doctor ID
+        $appointment->appointment_date = $request->appointment_date;
+        $appointment->original_price = $request->price;  // Store the original price
+        $appointment->price = $finalPrice;  // Store the final price after discount
+        $appointment->notes = $request->notes;
+        $appointment->status = 'booked';  // Set the status as 'booked'
+    
+        // If a coupon was applied, store coupon-related information
+        if ($coupon) {
+            $appointment->coupon_id = $coupon->id;  // Store the applied coupon's ID
+            $appointment->discount_amount = $discountAmount;  // Store the discount amount
+        }
+    
+        // Save the appointment record to the database
         $appointment->save();
-
-        // Return success message
-        // return redirect()->route('appointments.index')->with('success', 'Appointment booked successfully!');
+    
+        // Redirect or return response with success message
+        return redirect()->route('user.pricing')->with('success', 'Appointment booked successfully');
     }
+    
+        
 }

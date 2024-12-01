@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class Comment extends Model
 {
     use HasFactory;
-
+    protected $primaryKey = 'comment_id';
     // Define the relationship to the article
     public function article()
     {
@@ -23,5 +23,5 @@ class Comment extends Model
     }
 
     // The fillable fields
-    protected $fillable = ['article_id', 'user_id', 'content'];
+    protected $fillable = ['article_id', 'user_id', 'content', 'status'];
 }

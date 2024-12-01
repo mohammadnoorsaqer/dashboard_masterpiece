@@ -35,26 +35,26 @@ class AppointmentController extends Controller
             'status' => 'required|in:booked,completed,canceled',
             'notes' => 'nullable|string',
         ]);
-
+    
         // Check for coupon
         $coupon = null;
         $discountAmount = 0;
-
+    
         if ($request->filled('coupon_code')) {
             $coupon = Coupon::where('code', $request->coupon_code)
                 ->where('status', 'active')
                 ->where('valid_from', '<=', now())
                 ->where('valid_until', '>=', now())
                 ->first();
-
+    
             if ($coupon) {
                 $discountAmount = ($request->price * $coupon->discount_percentage) / 100;
             }
         }
-
+    
         // Calculate the final price
         $finalPrice = $request->price - $discountAmount;
-
+    
         // Create the appointment
         Appointment::create([
             'user_id' => $request->user_id,
@@ -66,9 +66,13 @@ class AppointmentController extends Controller
             'status' => $request->status,
             'notes' => $request->notes,
         ]);
-
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment created successfully!');
+    
+        // Flash success message and redirect back to the pricing page
+        session()->flash('message', 'Appointment booked successfully!');
+    
+        return redirect()->route('user.pricing'); // Ensure this points to the correct route for pricing
     }
+    
 
     public function updateStatus(Request $request, $id)
     {
@@ -83,6 +87,6 @@ class AppointmentController extends Controller
         $appointment->status = $request->status;
         $appointment->save();
 
-        return redirect()->route('admin.appointments.index')->with('success', 'Appointment status updated successfully!');
+        return redirect()->route('admin.appointments.index');
     }
 }

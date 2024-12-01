@@ -72,4 +72,8 @@ class User extends Authenticatable
     {
         return $this->role === self::ROLE_SUPER_ADMIN;
     }
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }
