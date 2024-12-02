@@ -119,23 +119,22 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script>
     // If the user is not logged in, show a notification before redirecting to login
-document.querySelectorAll('.btn-book-now').forEach(button => {
-    button.addEventListener('click', function() {
-        @guest
-            Swal.fire({
-                title: 'Login Required',
-                text: 'Please log in to book an appointment.',
-                icon: 'info',
-                confirmButtonText: 'Go to Login',
-            }).then(() => {
-                window.location.href = '{{ route('login') }}';
-            });
-        @endguest
+    document.querySelectorAll('.btn-book-now').forEach(button => {
+        button.addEventListener('click', function() {
+            @guest
+                Swal.fire({
+                    title: 'Login Required',
+                    text: 'Please log in to book an appointment.',
+                    icon: 'info',
+                    confirmButtonText: 'Go to Login',
+                }).then(() => {
+                    window.location.href = '{{ route('login') }}';
+                });
+            @endguest
+        });
     });
-});
 
     // Store the original price when the modal opens
     let originalPrice = 0;
@@ -152,36 +151,65 @@ document.querySelectorAll('.btn-book-now').forEach(button => {
             originalPrice = parseFloat(packagePrice); // Store the original price
         });
     });
-
-    // Confirm Booking on button click
     document.getElementById('confirmBookingBtn').addEventListener('click', function(e) {
-        e.preventDefault(); // Prevent form submission
+    e.preventDefault(); // Prevent form submission to manually validate
 
-        // Show SweetAlert confirmation dialog
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to confirm this booking?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, confirm it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                // If confirmed, show a success message
-                Swal.fire({
-                    title: 'Booking Confirmed!',
-                    text: "Your appointment has been successfully booked.",
-                    icon: 'success',
-                    confirmButtonText: 'Okay'
-                }).then(() => {
-                    // After "Okay" is clicked, submit the form
-                    document.getElementById('bookingForm').submit();
-                });
-            }
-        });
+    // Validate the form fields
+    const doctorId = document.getElementById('doctor_id').value;
+    const appointmentDate = document.getElementById('appointment_date').value;
+    const price = parseFloat(document.getElementById('price').value);
+
+    // Get current date and time
+    const currentDate = new Date();
+    const selectedDate = new Date(appointmentDate);
+
+    if (!doctorId) {
+        Swal.fire("Error", "Please select a doctor.", "error");
+        return;
+    }
+
+    if (!appointmentDate) {
+        Swal.fire("Error", "Please select an appointment date.", "error");
+        return;
+    }
+
+    // Check if the selected appointment date is in the past
+    if (selectedDate <= currentDate) {
+        Swal.fire("Error", "You cannot select a past date. Please choose a future date and time.", "error");
+        return;
+    }
+
+    if (isNaN(price) || price <= 0) {
+        Swal.fire("Error", "Price is invalid.", "error");
+        return;
+    }
+
+    // Show SweetAlert confirmation dialog before submitting
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "Do you want to confirm this booking?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, confirm it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If confirmed, show a success message
+            Swal.fire({
+                title: 'Booking Confirmed!',
+                text: "Your appointment has been successfully booked.",
+                icon: 'success',
+                confirmButtonText: 'Okay'
+            }).then(() => {
+                // After "Okay" is clicked, submit the form
+                document.getElementById('bookingForm').submit();
+            });
+        }
     });
+});
+
 
     // Apply Coupon Functionality with SweetAlert confirmation
     document.getElementById('apply-coupon').addEventListener('click', function() {
@@ -254,5 +282,6 @@ document.querySelectorAll('.btn-book-now').forEach(button => {
         });
     });
 </script>
+
 
 @endsection
