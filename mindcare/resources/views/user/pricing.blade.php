@@ -47,7 +47,7 @@
                 <div class="modal-body p-3">
                     @csrf
                     <!-- Hidden inputs for necessary data -->
-                    <input type="hidden" id="user_id" name="user_id" value="{{ auth()->user()->id }}">
+                    <input type="hidden" id="user_id" name="user_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
                     <input type="hidden" id="package_id" name="package_id">
 
                     <div class="row g-2">
@@ -121,6 +121,22 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // If the user is not logged in, show a notification before redirecting to login
+document.querySelectorAll('.btn-book-now').forEach(button => {
+    button.addEventListener('click', function() {
+        @guest
+            Swal.fire({
+                title: 'Login Required',
+                text: 'Please log in to book an appointment.',
+                icon: 'info',
+                confirmButtonText: 'Go to Login',
+            }).then(() => {
+                window.location.href = '{{ route('login') }}';
+            });
+        @endguest
+    });
+});
+
     // Store the original price when the modal opens
     let originalPrice = 0;
 

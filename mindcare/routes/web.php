@@ -79,7 +79,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('user.home');
 });
 
 Route::get('/dashboard', function () {

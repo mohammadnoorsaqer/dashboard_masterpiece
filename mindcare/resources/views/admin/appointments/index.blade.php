@@ -11,6 +11,7 @@
             <tr>
                 <th>User</th>
                 <th>Doctor</th>
+                <th>Package</th> <!-- Added Package Column -->
                 <th>Appointment Date</th>
                 <th>Status</th>
                 <th>Original Price</th>
@@ -23,6 +24,7 @@
                 <tr>
                     <td>{{ $appointment->user ? $appointment->user->name : 'Guest' }}</td>
                     <td>{{ $appointment->doctor->name }}</td>
+                    <td>{{ $appointment->package ? $appointment->package->name : 'N/A' }}</td> <!-- Displaying Package Name -->
                     <td>{{ $appointment->appointment_date }}</td>
                     <td>
                         <!-- Status Change Form -->
@@ -61,36 +63,36 @@
     </table>
 </div>
 
+<!-- SweetAlert Script -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmStatusChange(event, appointmentId) {
+        // Get the selected value from the dropdown
+        const selectedStatus = event.target.value;
 
-    <!-- SweetAlert Script -->
-    <script>
-        function confirmStatusChange(event, appointmentId) {
-            // Get the selected value from the dropdown
-            const selectedStatus = event.target.value;
+        // Prevent the form from submitting immediately
+        event.preventDefault();
 
-            // Prevent the form from submitting immediately
-            event.preventDefault();
+        // Show SweetAlert prompt
+        Swal.fire({
+            title: 'Are you sure?',
+            text: `Do you want to change the status to ${selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, change it!',
+            cancelButtonText: 'No, cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, submit the form
+                document.getElementById('status-form-' + appointmentId).submit();
+            } else {
+                // If canceled, reset the dropdown to the previous value
+                event.target.value = event.target.dataset.previousValue;
+            }
+        });
 
-            // Show SweetAlert prompt
-            Swal.fire({
-                title: 'Are you sure?',
-                text: `Do you want to change the status to ${selectedStatus.charAt(0).toUpperCase() + selectedStatus.slice(1)}?`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, change it!',
-                cancelButtonText: 'No, cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // If confirmed, submit the form
-                    document.getElementById('status-form-' + appointmentId).submit();
-                } else {
-                    // If canceled, reset the dropdown to the previous value
-                    event.target.value = event.target.dataset.previousValue;
-                }
-            });
-
-            // Store the previous value in case the user cancels
-            event.target.dataset.previousValue = event.target.value;
-        }
-    </script>
+        // Store the previous value in case the user cancels
+        event.target.dataset.previousValue = event.target.value;
+    }
+</script>
 @endsection
