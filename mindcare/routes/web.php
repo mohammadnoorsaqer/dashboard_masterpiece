@@ -123,5 +123,7 @@ Route::get('/contact', function () {
 });
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-
+Route::get('/doctors/dashboard', function () {
+    return view('doctors.dashboard');
+})->name('doctors.dashboard');
 require __DIR__.'/auth.php';
