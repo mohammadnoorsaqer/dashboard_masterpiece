@@ -153,8 +153,8 @@
                                     data-bs-toggle="dropdown" 
                                     aria-expanded="false">
                                 <i class="fas fa-user-circle me-2"></i>
-                                <span>Admin</span>
-                            </button>
+                                <span>{{ auth()->user()->name }}</span>
+                                </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
                                 <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
