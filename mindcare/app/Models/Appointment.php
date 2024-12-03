@@ -11,7 +11,6 @@ class Appointment extends Model
 
     protected $fillable = [
         'user_id',
-        'doctor_id',
         'appointment_date',
         'price',
         'coupon_id',
@@ -23,13 +22,16 @@ class Appointment extends Model
     // Relationships
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
+    // Relationship with Doctor (User with role 3)
     public function doctor()
     {
-        return $this->belongsTo(Doctor::class);
+        return $this->belongsTo(User::class, 'doctor_id');  // Make sure doctor_id is still in the appointments table
     }
+    
+    
     public function reviews()
 {
     return $this->hasMany(Review::class);

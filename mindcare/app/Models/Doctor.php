@@ -8,16 +8,13 @@ use Illuminate\Database\Eloquent\Model;
 class Doctor extends Model
 {
     use HasFactory;
-    protected $fillable = [
-        'name',             
-        'email',            
-        'password',          
-        'specialization',   
-        'bio',             
-    ];
+    protected $fillable = ['name', 'specialization', 'bio', 'user_id','email','password'            
+];
+
     public function run()
 {
 
     Doctor::factory(10)->create();  
 }
+
 }

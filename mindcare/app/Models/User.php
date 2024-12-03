@@ -76,4 +76,20 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+    public function appointments()
+{
+    return $this->hasMany(Appointment::class, 'user_id');
+}
+
+public function doctorAppointments()
+{
+    return $this->hasMany(Appointment::class, 'doctor_id');
+}
+// User model
+public function doctor()
+{
+    return $this->hasOne(Doctor::class);
+}
+
+
 }

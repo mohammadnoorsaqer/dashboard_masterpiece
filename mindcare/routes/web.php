@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 */
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\DoctorsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AppointmentController;
 use App\Http\Controllers\Admin\CouponController;
@@ -122,8 +123,9 @@ Route::get('/contact', function () {
     return view('user.contact');
 });
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    Route::get('/doctor/dashboard', [DoctorsController::class, 'dashboard'])->name('doctor.dashboard');
+    Route::post('/doctor/appointments/{appointment}/update', [DoctorsController::class, 'updateAppointment'])->name('doctor.appointments.update');
 
-Route::get('/doctors/dashboard', function () {
-    return view('doctors.dashboard');
-})->name('doctors.dashboard');
+
+
 require __DIR__.'/auth.php';

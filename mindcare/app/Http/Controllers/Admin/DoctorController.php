@@ -3,7 +3,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Doctor;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
 
 class DoctorController extends Controller
 {
@@ -22,16 +25,23 @@ class DoctorController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:100',
-            'email' => 'required|email|unique:doctors,email',
+            'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:6',
             'specialization' => 'required|string|max:100',
             'bio' => 'nullable|string',
         ]);
-
-        Doctor::create([
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password), 
+            'password' => Hash::make($request->password),
+            'role' => 3, // Role 3 = Doctor
+        ]);
+        Doctor::create([
+            'user_id' => $user->id,
+            'email' => $request->email,
+            'name' => $request->name,
+            'password' => Hash::make($request->password),
+
             'specialization' => $request->specialization,
             'bio' => $request->bio,
         ]);

@@ -52,6 +52,8 @@ class UserAppointmentController extends Controller
                 return redirect()->route('user.pricing')->with('error', 'Invalid or expired coupon code');
             }
         }
+        $doctor = Doctor::find($request->doctor_id);
+
     
         // Calculate final price after applying discount
         $finalPrice = $request->price - $discountAmount;
@@ -59,7 +61,7 @@ class UserAppointmentController extends Controller
         // Create a new appointment record
         $appointment = new Appointment();
         $appointment->user_id = $request->user_id;
-        $appointment->doctor_id = $request->doctor_id;  // Store the selected doctor ID
+        $appointment->doctor_id = $doctor->user_id;  // Use the doctor’s user_id instead of the doctor’s id
         $appointment->appointment_date = $request->appointment_date;
         $appointment->original_price = $request->price;  // Store the original price
         $appointment->price = $finalPrice;  // Store the final price after discount
