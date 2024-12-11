@@ -15,6 +15,7 @@ class Appointment extends Model
         'price',
         'coupon_id',
         'discount_amount',
+        'package_id',
         'status',
         'notes',
     ];
@@ -39,6 +40,10 @@ class Appointment extends Model
 public function coupon()
 {
     return $this->belongsTo(Coupon::class);
+}
+public function package()
+{
+    return $this->belongsTo(Package::class);
 }
 
 }

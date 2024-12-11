@@ -9,24 +9,34 @@
                 <h2>Affordable Packages</h2>
             </div>
         </div>
-        <div class="row">
+        <div class="row g-4">
             <!-- Loop through the packages -->
             @foreach($packages as $package)
                 <div class="col-md-4 ftco-animate d-flex">
-                    <div class="block-7 w-100">
-                        <div class="text-center">
-                            <span class="price"><sup>$</sup> <span class="number" id="price-{{ $package->id }}">{{ $package->price }}</span> <sub>/mo</sub></span>
-                            <span class="excerpt d-block">For {{ $package->category }}</span>
-                            <ul class="pricing-text mb-5">
+                    <div class="block-7 w-100 bg-white p-4 h-100">
+                        <div class="text-center d-flex flex-column h-100">
+                            <div class="pricing-header mb-4">
+                                <span class="price"><sup>$</sup> <span class="number" id="price-{{ $package->id }}">{{ $package->price }}</span> <sub>/mo</sub></span>
+                                <span class="excerpt d-block mt-2">For {{ $package->category }}</span>
+                            </div>
+                            <ul class="pricing-text mb-4 flex-grow-1">
                                 @foreach(explode(',', $package->description) as $service)
-                                    <li><span class="fa fa-check mr-2"></span>{{ $service }}</li>
+                                    <li class="d-flex align-items-center mb-3">
+                                        <span class="fa fa-check mr-2"></span>
+                                        <span>{{ $service }}</span>
+                                    </li>
                                 @endforeach
                             </ul>
                             <!-- Book Now Button -->
-                            <button class="btn btn-primary d-block px-2 py-3 btn-book-now" 
-                                data-bs-toggle="modal" data-bs-target="#bookModal" 
-                                data-price="{{ $package->price }}" data-package-id="{{ $package->id }}"
-                                data-plan="{{ $package->name }}" data-category="{{ $package->category }}">Book Now</button>
+                            <button class="btn btn-primary d-block px-2 py-3 btn-book-now mt-auto" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#bookModal" 
+                                data-price="{{ $package->price }}" 
+                                data-package-id="{{ $package->id }}"
+                                data-plan="{{ $package->name }}" 
+                                data-category="{{ $package->category }}">
+                                Book Now
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -44,75 +54,82 @@
             </div>
             
             <form action="{{ route('appointments.store') }}" method="POST" id="bookingForm" class="needs-validation" novalidate>
-                <div class="modal-body p-3">
-                    @csrf
-                    <!-- Hidden inputs for necessary data -->
-                    <input type="hidden" id="user_id" name="user_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
-                    <input type="hidden" id="package_id" name="package_id">
+    <div class="modal-body p-3">
+        @csrf
+        <!-- Hidden inputs for necessary data -->
+        <input type="hidden" id="user_id" name="user_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
+        <input type="hidden" id="package_id" name="package_id">
+        <!-- Add hidden fields for original_price, coupon_id, and discount_amount -->
+        <input type="hidden" id="original_price" name="original_price">
+        <input type="hidden" id="coupon_id" name="coupon_id">
+        <input type="hidden" id="discount_amount" name="discount_amount">
 
-                    <div class="row g-2">
-                        <!-- Doctor Selection -->
-                        <div class="col-12 mb-2">
-                            <label for="doctor_id" class="form-label small">Select Doctor</label>
-                            <select class="form-select form-select-sm" id="doctor_id" name="doctor_id" required>
-                                <option value="" disabled selected>Choose a Doctor</option>
-                                @foreach ($doctors as $doctor)
-                                    <option value="{{ $doctor->id }}">
-                                        {{ $doctor->name }} ({{ $doctor->specialization }})
-                                    </option>
-                                @endforeach
-                            </select>
-                            <div class="invalid-feedback small">Please select a doctor</div>
-                        </div>
+        <div class="row g-2">
+            <!-- Doctor Selection -->
+            <div class="col-12 mb-2">
+                <label for="doctor_id" class="form-label small">Select Doctor</label>
+                <select class="form-select form-select-sm" id="doctor_id" name="doctor_id" required>
+                    <option value="" disabled selected>Choose a Doctor</option>
+                    @foreach ($doctors as $doctor)
+                        <option value="{{ $doctor->id }}">
+                            {{ $doctor->name }} ({{ $doctor->specialization }})
+                        </option>
+                    @endforeach
+                </select>
+                <div class="invalid-feedback small">Please select a doctor</div>
+            </div>
 
-                        <!-- Price -->
-                        <div class="col-12 mb-2">
-                            <label for="price" class="form-label small">Price</label>
-                            <div class="input-group input-group-sm">
-                                <span class="input-group-text">$</span>
-                                <input type="number" class="form-control form-control-sm" id="price" name="price" value="100" readonly>
-                            </div>
-                        </div>
+            <!-- Price -->
+            <div class="col-12 mb-2">
+    <label for="price" class="form-label small">Price</label>
+    <div class="input-group input-group-sm">
+        <span class="input-group-text">$</span>
+        <input type="number" class="form-control form-control-sm" id="price" name="price" value="100" readonly>
+    </div>
+    <div id="original-price-section" class="small text-muted mt-1">
+        Original Price: $<span id="original-price">100.00</span>
+    </div>
+</div>
 
-                        <!-- Appointment Date -->
-                        <div class="col-12 mb-2">
-                            <label for="appointment_date" class="form-label small">Appointment Date</label>
-                            <input type="datetime-local" class="form-control form-control-sm" id="appointment_date" name="appointment_date" required>
-                            <div class="invalid-feedback small">Please select an appointment date</div>
-                        </div>
+            <!-- Appointment Date -->
+            <div class="col-12 mb-2">
+                <label for="appointment_date" class="form-label small">Appointment Date</label>
+                <input type="datetime-local" class="form-control form-control-sm" id="appointment_date" name="appointment_date" required>
+                <div class="invalid-feedback small">Please select an appointment date</div>
+            </div>
 
-                        <!-- Notes -->
-                        <div class="col-12 mb-2">
-                            <label for="notes" class="form-label small">Additional Notes</label>
-                            <textarea class="form-control form-control-sm" id="notes" name="notes" rows="2" placeholder="Optional notes"></textarea>
-                        </div>
+            <!-- Notes -->
+            <div class="col-12 mb-2">
+                <label for="notes" class="form-label small">Additional Notes</label>
+                <textarea class="form-control form-control-sm" id="notes" name="notes" rows="2" placeholder="Optional notes"></textarea>
+            </div>
 
-                        <!-- Coupon Code -->
-                        <div class="col-12 mb-2">
-                            <label for="coupon_code" class="form-label small">Coupon Code</label>
-                            <div class="input-group input-group-sm">
-                                <input type="text" class="form-control form-control-sm" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
-                                <button type="button" class="btn btn-outline-primary btn-sm" id="apply-coupon">Apply</button>
-                            </div>
-                        </div>
-
-                        <!-- Coupon Notification -->
-                        <div id="coupon-notification" class="col-12 mb-2" style="display: none;">
-                            <div class="alert alert-success alert-sm d-flex justify-content-between align-items-center p-2">
-                                <span class="small">
-                                    Coupon applied! Discount: $<span id="discount-amount"></span>
-                                </span>
-                                <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove</button>
-                            </div>
-                        </div>
-                    </div>
+            <!-- Coupon Code -->
+            <div class="col-12 mb-2">
+                <label for="coupon_code" class="form-label small">Coupon Code</label>
+                <div class="input-group input-group-sm">
+                    <input type="text" class="form-control form-control-sm" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="apply-coupon">Apply</button>
                 </div>
+            </div>
 
-                <div class="modal-footer py-2">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="confirmBookingBtn">Confirm</button>
+            <!-- Coupon Notification -->
+            <div id="coupon-notification" class="col-12 mb-2" style="display: none;">
+                <div class="alert alert-success alert-sm d-flex justify-content-between align-items-center p-2">
+                    <span class="small">
+                        Coupon applied! Discount: $<span id="discount-amount"></span>
+                    </span>
+                    <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove</button>
                 </div>
-            </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer py-2">
+        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary btn-sm" id="confirmBookingBtn">Confirm</button>
+    </div>
+</form>
         </div>
     </div>
 </div>
@@ -149,6 +166,8 @@
             document.getElementById('price').value = packagePrice;
             document.getElementById('package_id').value = this.getAttribute('data-package-id');
             originalPrice = parseFloat(packagePrice); // Store the original price
+            document.getElementById('original_price').value = originalPrice.toFixed(2);
+
         });
     });
     document.getElementById('confirmBookingBtn').addEventListener('click', function(e) {
@@ -275,6 +294,7 @@
                 document.getElementById('price').value = originalPrice.toFixed(2);
 
                 // Hide the coupon notification and show the "Apply" button again
+                
                 document.getElementById('coupon-notification').style.display = 'none';
                 document.getElementById('apply-coupon').style.display = 'inline-block';
                 document.getElementById('remove-coupon').style.display = 'none';
@@ -285,3 +305,51 @@
 
 
 @endsection
+<style>
+.block-7 {
+    border-radius: 8px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+}
+
+.block-7:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.pricing-text li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.pricing-text li:last-child {
+    border-bottom: none;
+}
+
+.price {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000;
+    display: block;
+}
+
+.price sup {
+    font-size: 1rem;
+    top: -1.2em;
+}
+
+.price sub {
+    font-size: 0.8rem;
+    color: #6c757d;
+}
+
+.excerpt {
+    font-size: 1.1rem;
+    color: #6c757d;
+}
+
+.row.g-4 {
+    --bs-gutter-x: 1.5rem;
+    --bs-gutter-y: 1.5rem;
+}
+</style>

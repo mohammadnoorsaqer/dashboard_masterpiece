@@ -35,10 +35,8 @@ class AuthenticatedSessionController extends Controller
             return back()->withErrors([
                 'email' => 'Your account has been deactivated. Please contact support.'
             ]);
-        }
-        if ($user->role == 3) {
-             redirect('/doctor/dashboard');
-        }
+        }   
+
         // Authenticate user if the account is active
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();

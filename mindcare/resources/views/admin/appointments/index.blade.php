@@ -11,11 +11,10 @@
             <tr>
                 <th>User</th>
                 <th>Doctor</th>
-                <th>Package</th> <!-- Added Package Column -->
+                <th>Package</th> 
                 <th>Appointment Date</th>
                 <th>Status</th>
                 <th>Original Price</th>
-                <th>Discount</th>
                 <th>Final Price</th>
             </tr>
         </thead>
@@ -43,15 +42,6 @@
                     <td>
                         <!-- Display original price, check for null and set default value -->
                         ${{ number_format($appointment->original_price ?? 0, 2) }}
-                    </td>
-                    <td>
-                        <!-- Display discount amount, if any -->
-                        @if($appointment->coupon && $appointment->discount_amount > 0)
-                            ${{ number_format($appointment->discount_amount, 2) }} 
-                            ({{ $appointment->coupon->code }})
-                        @else
-                            No Discount
-                        @endif
                     </td>
                     <td>
                         <!-- Display final price after discount -->

@@ -17,4 +17,8 @@ class Package extends Model
         'duration',
         'status',
     ];
-}
+    public function appointments()
+    {
+        return $this->hasMany(Appointment::class);
+    }
+}   

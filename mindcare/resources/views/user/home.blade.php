@@ -229,11 +229,7 @@
       </div>
     </div>
   </div>
-</section>
-
-
-
-  
+</section>  
     <section class="ftco-section testimony-section">
     <div class="img img-bg border" style="background-image: url('{{ asset('images/bg_4.jpg') }}');"></div>
 
