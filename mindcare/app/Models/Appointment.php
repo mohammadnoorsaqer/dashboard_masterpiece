@@ -29,9 +29,8 @@ class Appointment extends Model
     // Relationship with Doctor (User with role 3)
     public function doctor()
     {
-        return $this->belongsTo(User::class, 'doctor_id');  // Make sure doctor_id is still in the appointments table
+        return $this->belongsTo(Doctor::class, 'doctor_id'); // Ensure you're using the correct column, which should be doctor_id
     }
-    
     
     public function reviews()
 {

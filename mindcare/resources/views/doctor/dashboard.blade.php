@@ -19,7 +19,12 @@
                         <i class="fas fa-list-alt me-2"></i>Your Appointments
                     </h3>
 
+                    {{-- Debugging: Check if appointments exist --}}
                     @if($appointments->count() > 0)
+                        <div>
+                            <p>Appointments Count: {{ $appointments->count() }}</p>
+                        </div>
+
                         <div class="table-responsive">
                             <table class="table table-striped table-hover table-bordered">
                                 <thead class="table-dark">

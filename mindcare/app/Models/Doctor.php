@@ -16,5 +16,9 @@ class Doctor extends Model
 
     Doctor::factory(10)->create();  
 }
+public function appointments()
+{
+    return $this->hasMany(Appointment::class);
+}
 
 }

@@ -19,36 +19,36 @@
             </tr>
         </thead>
         <tbody>
-            @foreach($appointments as $appointment)
-                <tr>
-                    <td>{{ $appointment->user ? $appointment->user->name : 'Guest' }}</td>
-                    <td>{{ $appointment->doctor->name }}</td>
-                    <td>{{ $appointment->package ? $appointment->package->name : 'N/A' }}</td> <!-- Displaying Package Name -->
-                    <td>{{ $appointment->appointment_date }}</td>
-                    <td>
-                        <!-- Status Change Form -->
-                        <form action="{{ route('admin.appointments.updateStatus', $appointment->id) }}" method="POST" id="status-form-{{ $appointment->id }}">
-                            @csrf
-                            @method('PUT')
-                            <select name="status" class="form-control" 
-                                {{ $appointment->status == 'completed' || $appointment->status == 'canceled' ? 'disabled' : '' }} 
-                                onchange="confirmStatusChange(event, {{ $appointment->id }})">
-                                <option value="booked" {{ $appointment->status == 'booked' ? 'selected' : '' }}>Booked</option>
-                                <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                                <option value="canceled" {{ $appointment->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
-                            </select>
-                        </form>
-                    </td>
-                    <td>
-                        <!-- Display original price, check for null and set default value -->
-                        ${{ number_format($appointment->original_price ?? 0, 2) }}
-                    </td>
-                    <td>
-                        <!-- Display final price after discount -->
-                        ${{ number_format($appointment->price - ($appointment->discount_amount ?? 0), 2) }}
-                    </td>
-                </tr>
-            @endforeach
+        @foreach($appointments as $appointment)
+    <tr>
+        <td>{{ $appointment->user ? $appointment->user->name : 'Guest' }}</td>
+        <td>
+            @if($appointment->doctor)
+                {{ $appointment->doctor->name }}
+            @else
+                No Doctor Assigned
+            @endif
+        </td>
+        <td>{{ $appointment->package ? $appointment->package->name : 'N/A' }}</td>
+        <td>{{ $appointment->appointment_date }}</td>
+        <td>
+            <form action="{{ route('admin.appointments.updateStatus', $appointment->id) }}" method="POST" id="status-form-{{ $appointment->id }}">
+                @csrf
+                @method('PUT')
+                <select name="status" class="form-control" 
+                    {{ $appointment->status == 'completed' || $appointment->status == 'canceled' ? 'disabled' : '' }} 
+                    onchange="confirmStatusChange(event, {{ $appointment->id }})">
+                    <option value="booked" {{ $appointment->status == 'booked' ? 'selected' : '' }}>Booked</option>
+                    <option value="completed" {{ $appointment->status == 'completed' ? 'selected' : '' }}>Completed</option>
+                    <option value="canceled" {{ $appointment->status == 'canceled' ? 'selected' : '' }}>Canceled</option>
+                </select>
+            </form>
+        </td>
+        <td>${{ number_format($appointment->original_price ?? 0, 2) }}</td>
+        <td>${{ number_format($appointment->price - ($appointment->discount_amount ?? 0), 2) }}</td>
+    </tr>
+@endforeach
+
         </tbody>
     </table>
 </div>
