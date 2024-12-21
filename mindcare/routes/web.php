@@ -28,6 +28,8 @@ use App\Http\Controllers\UserArticleController;
 use App\Http\Controllers\PackageController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
+use App\Models\Doctor;
+
 use App\Http\Controllers\Admin\CommentController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Dashboard route
@@ -94,14 +96,18 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/home', function () {
     return view('user.home');
-});
+})->name('home');
 
 Route::get('/about', function () {
     return view('user.about');
 });
 
 Route::get('/doctors', function () {
-    return view('user.doctors');
+    // Fetch all doctors from the database
+    $doctors = Doctor::all();
+
+    // Pass doctors data to the view
+    return view('user.doctors', compact('doctors'));
 });
 Route::get('/services', function () {
     return view('user.services');
@@ -127,6 +133,9 @@ Route::middleware(['auth', 'isDoctor'])->group(function () {
     Route::get('/doctor/dashboard', [DoctorsController::class, 'dashboard'])->name('doctor.dashboard');
     Route::post('/doctor/appointments/{appointment}/update', [DoctorsController::class, 'updateAppointment'])->name('doctor.appointments.update');
 });
+Route::get('/appointments/{appointment}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
 
+// Store the submitted review
+Route::post('/reviews/store', [ReviewController::class, 'store'])->name('reviews.store');
 
 require __DIR__.'/auth.php';

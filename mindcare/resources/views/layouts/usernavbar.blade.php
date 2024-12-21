@@ -14,7 +14,7 @@
                     <a href="{{ url('about') }}" class="nav-link">About</a>
                 </li>
                 <li class="nav-item {{ request()->is('counselor') ? 'active' : '' }}">
-                    <a href="{{ url('doctors') }}" class="nav-link">Counselor</a>
+                    <a href="{{ url('doctors') }}" class="nav-link">Doctor</a>
                 </li>
                 <li class="nav-item {{ request()->is('services') ? 'active' : '' }}">
                     <a href="{{ url('services') }}" class="nav-link">Services</a>

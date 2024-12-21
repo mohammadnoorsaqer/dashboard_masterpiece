@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Appointment;
 
 class ProfileController extends Controller
 {
@@ -16,8 +17,13 @@ class ProfileController extends Controller
      */
     public function edit(Request $request): View
     {
+        // Fetch user's appointments
+        $appointments = Appointment::where('user_id', $request->user()->id)->get();
+
+        // Pass the user and appointments to the view
         return view('profile.edit', [
             'user' => $request->user(),
+            'appointments' => $appointments,
         ]);
     }
 

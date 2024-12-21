@@ -7,6 +7,14 @@ use Illuminate\Http\Request;
 
 class DoctorsController extends Controller
 {
+    public function index()
+    {
+        // Fetch all doctors from the database
+        $doctors = Doctor::all(); 
+
+        // Pass the doctors data to the view
+        return view('user.doctors', compact('doctors'));
+    }
     // Show dashboard
     public function dashboard()
     {

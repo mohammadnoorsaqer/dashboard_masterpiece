@@ -24,9 +24,6 @@
 
         </div>
       </div>
-      <a href="https://vimeo.com/45830194" class="img-video popup-vimeo d-flex align-items-center justify-content-center">
-        <span class="fa fa-play"></span>
-      </a>
     </div>
   </div>
 </div>
@@ -139,10 +136,6 @@
 	            <p>A small river named Duden flows by their place and supplies it with the necessary regelialia. It is a paradisematic country, in which roasted parts of sentences fly into your mouth.</p>
 	            <p>On her way she met a copy. The copy warned the Little Blind Text, that where it came from it would have been rewritten a thousand times and everything that was left from its origin would be the word "and" and the Little Blind Text should turn around and return to its own, safe country.</p>
 
-	            <a href="https://vimeo.com/45830194" class="play-video popup-vimeo d-flex align-items-center mt-4">
-	            	<div class="icon d-flex align-items-center justify-content-center"><span class="fa fa-play"></span></div>
-	            	<span class="watch">Watch Our Consultant Video</span>
-	            </a>
 	          </div>
 
 					</div>
