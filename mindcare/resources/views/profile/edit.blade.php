@@ -236,6 +236,58 @@
         to { opacity: 1; transform: translateY(0); }
     }
 
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: white;
+        padding: 20px;
+        border-radius: 8px;
+        width: 500px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    .modal-close-btn {
+        background-color: #dc3545;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    .modal-submit-btn {
+        background-color: #589167;
+        color: white;
+        padding: 0.75rem 1.25rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
     @media (max-width: 1024px) {
         .profile-container {
             flex-direction: column;
@@ -348,7 +400,7 @@
                         </span>
                     </div>
                     @if($appointment->status === 'completed')
-                        <a href="{{ route('reviews.create', $appointment->id) }}" class="review-link">
+                        <a href="javascript:void(0);" class="review-link" onclick="openReviewModal({{ $appointment->id }})">
                             <i class="fas fa-star"></i> Add a Review
                         </a>
                     @endif
@@ -358,11 +410,44 @@
     </div>
 </div>
 
+
+<!-- Modal for Adding Review -->
+<div id="review-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">Add a Review</div>
+        <form id="review-form" method="POST" action="{{ route('reviews.store') }}">
+            @csrf
+            <input type="hidden" name="appointment_id" id="appointment-id">
+            <div class="form-group">
+                <label class="form-label">Your Review</label>
+                <textarea name="review" class="form-input" rows="4" required></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Rating</label>
+                <select name="rating" class="form-input" required>
+                    <option value="">Select Rating</option>
+                    <option value="1">1 - Poor</option>
+                    <option value="2">2 - Fair</option>
+                    <option value="3">3 - Good</option>
+                    <option value="4">4 - Very Good</option>
+                    <option value="5">5 - Excellent</option>
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="modal-close-btn" onclick="closeReviewModal()">Close</button>
+                <button type="submit" class="modal-submit-btn">Submit Review</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
+        // Navigation item click functionality
         $('.nav-item').on('click', function() {
             var target = $(this).data('section');
             if (target) {
@@ -373,6 +458,7 @@
             }
         });
 
+        // Handle form submission for profile
         $('#profile-form').submit(function(e) {
             e.preventDefault();
             Swal.fire({
@@ -390,6 +476,7 @@
             });
         });
 
+        // Handle form submission for password change
         $('#password-form').submit(function(e) {
             e.preventDefault();
             Swal.fire({
@@ -407,5 +494,16 @@
             });
         });
     });
+
+    // Open Review Modal
+    function openReviewModal(appointmentId) {
+        $('#appointment-id').val(appointmentId);
+        $('#review-modal').fadeIn();
+    }
+
+    // Close Review Modal
+    function closeReviewModal() {
+        $('#review-modal').fadeOut();
+    }
 </script>
 @endsection

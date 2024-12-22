@@ -133,9 +133,7 @@ Route::middleware(['auth', 'isDoctor'])->group(function () {
     Route::get('/doctor/dashboard', [DoctorsController::class, 'dashboard'])->name('doctor.dashboard');
     Route::post('/doctor/appointments/{appointment}/update', [DoctorsController::class, 'updateAppointment'])->name('doctor.appointments.update');
 });
-Route::get('/appointments/{appointment}/reviews/create', [ReviewController::class, 'create'])->name('reviews.create');
-
-// Store the submitted review
-Route::post('/reviews/store', [ReviewController::class, 'store'])->name('reviews.store');
+// Show the review popup for a specific appointment
+Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 
 require __DIR__.'/auth.php';
