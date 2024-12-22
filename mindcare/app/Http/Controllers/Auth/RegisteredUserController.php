@@ -34,14 +34,14 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => ['required', 'integer', 'in:' . implode(',', [User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN])], // Validate role
+            // 'role' => ['required', 'integer', 'in:' . implode(',', [User::ROLE_USER, User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN])], // Validate role
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role, // Use selected role from the form
+            // 'role' => $request->role, // Use selected role from the form
         ]);
 
         event(new Registered($user));

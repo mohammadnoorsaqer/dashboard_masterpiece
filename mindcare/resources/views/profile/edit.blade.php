@@ -420,8 +420,8 @@
             <input type="hidden" name="appointment_id" id="appointment-id">
             <div class="form-group">
                 <label class="form-label">Your Review</label>
-                <textarea name="review" class="form-input" rows="4" required></textarea>
-            </div>
+                <textarea name="comments" class="form-input" rows="4" required></textarea>
+                </div>
             <div class="form-group">
                 <label class="form-label">Rating</label>
                 <select name="rating" class="form-input" required>
@@ -435,20 +435,167 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="modal-close-btn" onclick="closeReviewModal()">Close</button>
-                <button type="submit" class="modal-submit-btn">Submit Review</button>
-            </div>
+                <button type="submit" class="modal-submit-btn" id="submit-review-btn" >Submit Review</button>
+                </div>
         </form>
     </div>
 </div>
 
+<style>
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1050;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1051;
+}
+
+.modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1052;
+}
+
+.modal-header {
+    padding: 1.25rem;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 0;
+}
+
+.close-button:hover {
+    color: #1f2937;
+}
+
+.form-group {
+    padding: 1.25rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.15s ease-in-out;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.modal-footer {
+    padding: 1.25rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-secondary {
+    background-color: #f3f4f6;
+    border: 1px solid #d1d5db;
+    color: #374151;
+}
+
+.btn-secondary:hover {
+    background-color: #e5e7eb;
+}
+
+.btn-primary {
+    background-color: #3b82f6;
+    border: 1px solid #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2563eb;
+}
+
+.btn-primary:disabled {
+    background-color: #93c5fd;
+    border-color: #93c5fd;
+    cursor: not-allowed;
+}
+
+/* Animation for modal */
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -60%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+.modal.show .modal-content {
+    animation: modalFadeIn 0.3s ease-out forwards;
+}
+</style>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         // Navigation item click functionality
-        $('.nav-item').on('click', function() {
+        $('.nav-item').on('click', function () {
             var target = $(this).data('section');
             if (target) {
                 $('.nav-item').removeClass('active');
@@ -459,7 +606,7 @@
         });
 
         // Handle form submission for profile
-        $('#profile-form').submit(function(e) {
+        $('#profile-form').submit(function (e) {
             e.preventDefault();
             Swal.fire({
                 title: 'Are you sure?',
@@ -477,7 +624,7 @@
         });
 
         // Handle form submission for password change
-        $('#password-form').submit(function(e) {
+        $('#password-form').submit(function (e) {
             e.preventDefault();
             Swal.fire({
                 title: 'Are you sure?',
@@ -493,12 +640,64 @@
                 }
             });
         });
+
+        // Review Form Submission
+        $('#review-form').submit(function (e) {
+            e.preventDefault(); // Prevent default form submission
+
+            // Submit the form using AJAX
+            $.ajax({
+                url: $(this).attr('action'), // Get the form action
+                method: $(this).attr('method'), // Get the form method
+                data: $(this).serialize(), // Serialize form data
+                success: function (response) {
+                    Swal.fire({
+                        title: 'Review Submitted!',
+                        text: 'Your review has been submitted successfully.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    }).then(() => {
+                        // Close the modal and reset the form
+                        closeReviewModal();
+                        $('#review-form')[0].reset();
+                    });
+                },
+                error: function () {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'There was an issue submitting your review. Please try again.',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                    });
+                },
+            });
+        });
     });
 
     // Open Review Modal
     function openReviewModal(appointmentId) {
         $('#appointment-id').val(appointmentId);
-        $('#review-modal').fadeIn();
+
+        // Check if the user has already submitted a review for this appointment
+        $.ajax({
+            url: '/check-review', // Create a route to check for an existing review
+            method: 'GET',
+            data: { appointment_id: appointmentId },
+            success: function (response) {
+                if (response.alreadyReviewed) {
+                    // Show the SweetAlert and don't open the modal
+                    Swal.fire({
+                        title: 'You have already submitted a review for this appointment.',
+                        icon: 'info',
+                        confirmButtonText: 'OK',
+                    });
+                } else {
+                    // If no review, enable the button and show the modal
+                    $('#submit-review-btn').prop('disabled', false); // Enable the submit button
+                    $('#review-modal').fadeIn(); // Open the modal
+                }
+            },
+        });
     }
 
     // Close Review Modal
@@ -506,4 +705,5 @@
         $('#review-modal').fadeOut();
     }
 </script>
+
 @endsection

@@ -87,9 +87,7 @@
                                 <span class="input-group-text">$</span>
                                 <input type="number" class="form-control form-control-sm" id="price" name="price" value="100" readonly>
                             </div>
-                            <div id="original-price-section" class="small text-muted mt-1">
-                                Original Price: $<span id="original-price">100.00</span>
-                            </div>
+            
                         </div>
 
                         <!-- Appointment Date -->

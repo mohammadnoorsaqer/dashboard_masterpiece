@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MindCare Admin - Login</title>
+    <title>MindCare - Login</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.6.0/dist/sweetalert2.min.js"></script>
 
     <style>
         body {
@@ -90,14 +90,13 @@
 </head>
 <body>
 
-
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
                 <div class="brand-logo">
                     <i class="fas fa-brain"></i>
                 </div>
-                <h3>MindCare Admin</h3>
+                <h3>MindCare</h3>
                 <p class="mb-0">Please login to your account</p>
             </div>
 
@@ -141,25 +140,17 @@
                         @enderror
                     </div>
 
-                    <!-- Remember Me -->
-                    <div class="block mt-4">
-                        <label for="remember_me" class="inline-flex items-center">
-                            <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500" name="remember">
-                            <span class="ms-2 text-sm text-gray-600">Remember me</span>
-                        </label>
-                    </div>
-
-                    <!-- Forgot Password Link -->
-                    <div class="row mb-4">
-                        <div class="col-6">
-                            <a href="{{ route('password.request') }}" class="text-decoration-none">Forgot Password?</a>
-                        </div>
-                    </div>
-
                     <button type="submit" class="btn btn-login">
                         <i class="fas fa-sign-in-alt me-2"></i> Login
                     </button>
                 </form>
+
+                <!-- Register Button -->
+                <div class="text-center mt-4">
+                    <a href="{{ route('register') }}" class="btn btn-outline-secondary">
+                        <i class="fas fa-user-plus me-2"></i> Register
+                    </a>
+                </div>
             </div>
         </div>
     </div>

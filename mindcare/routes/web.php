@@ -133,6 +133,8 @@ Route::middleware(['auth', 'isDoctor'])->group(function () {
     Route::get('/doctor/dashboard', [DoctorsController::class, 'dashboard'])->name('doctor.dashboard');
     Route::post('/doctor/appointments/{appointment}/update', [DoctorsController::class, 'updateAppointment'])->name('doctor.appointments.update');
 });
+Route::get('/check-review', [ReviewController::class, 'checkReview']);
+
 // Show the review popup for a specific appointment
 Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
 

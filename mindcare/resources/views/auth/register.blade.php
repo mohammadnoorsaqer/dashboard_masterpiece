@@ -72,6 +72,20 @@
             background: #34495E;
             color: white;
         }
+        .btn-login {
+            background: #f8f9fa;
+            color: #2C3E50;
+            padding: 12px;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 600;
+            border: 1px solid #2C3E50;
+            margin-top: 15px;
+        }
+        .btn-login:hover {
+            background: #2C3E50;
+            color: white;
+        }
         .error-message {
             display: none;
             color: #dc3545;
@@ -87,7 +101,7 @@
                 <div class="brand-logo">
                     <i class="fas fa-brain"></i>
                 </div>
-                <h3>MindCare Admin</h3>
+                <h3>MindCare </h3>
                 <p class="mb-0">Create a new account</p>
             </div>
             
@@ -157,23 +171,15 @@
                         @enderror
                     </div>
 
-                    <!-- Role -->
-                    <div class="mb-4">
-                        <label for="role" class="form-label">Role</label>
-                        <select id="role" name="role" class="form-control">
-                            <option value="{{ \App\Models\User::ROLE_USER }}" {{ old('role') == \App\Models\User::ROLE_USER ? 'selected' : '' }}>User</option>
-                            <option value="{{ \App\Models\User::ROLE_ADMIN }}" {{ old('role') == \App\Models\User::ROLE_ADMIN ? 'selected' : '' }}>Admin</option>
-                            <option value="{{ \App\Models\User::ROLE_SUPER_ADMIN }}" {{ old('role') == \App\Models\User::ROLE_SUPER_ADMIN ? 'selected' : '' }}>Super Admin</option>
-                        </select>
-                        @error('role')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-
                     <button type="submit" class="btn btn-register">
                         <i class="fas fa-user-plus me-2"></i> Register
                     </button>
                 </form>
+
+                <!-- Login Button -->
+                <a href="{{ route('login') }}" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i> Already have an account? Login
+                </a>
             </div>
         </div>
     </div>
