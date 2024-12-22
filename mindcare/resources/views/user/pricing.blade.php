@@ -44,6 +44,7 @@
         </div>
     </div>
 </section>
+
 <!-- Booking Modal -->
 <div class="modal fade" id="bookModal" tabindex="-1" aria-labelledby="bookModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-sm">
@@ -54,88 +55,88 @@
             </div>
             
             <form action="{{ route('appointments.store') }}" method="POST" id="bookingForm" class="needs-validation" novalidate>
-    <div class="modal-body p-3">
-        @csrf
-        <!-- Hidden inputs for necessary data -->
-        <input type="hidden" id="user_id" name="user_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
-        <input type="hidden" id="package_id" name="package_id">
-        <!-- Add hidden fields for original_price, coupon_id, and discount_amount -->
-        <input type="hidden" id="original_price" name="original_price">
-        <input type="hidden" id="coupon_id" name="coupon_id">
-        <input type="hidden" id="discount_amount" name="discount_amount">
+                <div class="modal-body p-3">
+                    @csrf
+                    <!-- Hidden inputs for necessary data -->
+                    <input type="hidden" id="user_id" name="user_id" value="{{ auth()->check() ? auth()->user()->id : '' }}">
+                    <input type="hidden" id="package_id" name="package_id">
+                    <!-- Add hidden fields for original_price, coupon_id, and discount_amount -->
+                    <input type="hidden" id="original_price" name="original_price">
+                    <input type="hidden" id="coupon_id" name="coupon_id">
+                    <input type="hidden" id="discount_amount" name="discount_amount">
 
-        <div class="row g-2">
-            <!-- Doctor Selection -->
-            <div class="col-12 mb-2">
-                <label for="doctor_id" class="form-label small">Select Doctor</label>
-                <select class="form-select form-select-sm" id="doctor_id" name="doctor_id" required>
-                    <option value="" disabled selected>Choose a Doctor</option>
-                    @foreach ($doctors as $doctor)
-                        <option value="{{ $doctor->id }}">
-                            {{ $doctor->name }} ({{ $doctor->specialization }})
-                        </option>
-                    @endforeach
-                </select>
-                <div class="invalid-feedback small">Please select a doctor</div>
-            </div>
+                    <div class="row g-2">
+                        <!-- Doctor Selection -->
+                        <div class="col-12 mb-2">
+                            <label for="doctor_id" class="form-label small">Select Doctor</label>
+                            <select class="form-select form-select-sm" id="doctor_id" name="doctor_id" required>
+                                <option value="" disabled selected>Choose a Doctor</option>
+                                @foreach ($doctors as $doctor)
+                                    <option value="{{ $doctor->id }}">
+                                        {{ $doctor->name }} ({{ $doctor->specialization }})
+                                    </option>
+                                @endforeach
+                            </select>
+                            <div class="invalid-feedback small">Please select a doctor</div>
+                        </div>
 
-            <!-- Price -->
-            <div class="col-12 mb-2">
-    <label for="price" class="form-label small">Price</label>
-    <div class="input-group input-group-sm">
-        <span class="input-group-text">$</span>
-        <input type="number" class="form-control form-control-sm" id="price" name="price" value="100" readonly>
-    </div>
-    <div id="original-price-section" class="small text-muted mt-1">
-        Original Price: $<span id="original-price">100.00</span>
+                        <!-- Price -->
+                        <div class="col-12 mb-2">
+                            <label for="price" class="form-label small">Price</label>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control form-control-sm" id="price" name="price" value="100" readonly>
+                            </div>
+                            <div id="original-price-section" class="small text-muted mt-1">
+                                Original Price: $<span id="original-price">100.00</span>
+                            </div>
+                        </div>
+
+                        <!-- Appointment Date -->
+                        <div class="col-12 mb-2">
+                            <label for="appointment_date" class="form-label small">Appointment Date</label>
+                            <input type="datetime-local" class="form-control form-control-sm" id="appointment_date" name="appointment_date" required>
+                            <div class="invalid-feedback small">Please select an appointment date</div>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="col-12 mb-2">
+                            <label for="notes" class="form-label small">Additional Notes</label>
+                            <textarea class="form-control form-control-sm" id="notes" name="notes" rows="2" placeholder="Optional notes"></textarea>
+                        </div>
+
+                        <!-- Coupon Code -->
+                        <div class="col-12 mb-2">
+                            <label for="coupon_code" class="form-label small">Coupon Code</label>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control form-control-sm" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="apply-coupon">Apply</button>
+                            </div>
+                        </div>
+
+                        <!-- Coupon Notification -->
+                        <div id="coupon-notification" class="col-12 mb-2" style="display: none;">
+                            <div class="alert alert-success alert-sm d-flex justify-content-between align-items-center p-2">
+                                <span class="small">
+                                    Coupon applied! Discount: $<span id="discount-amount"></span>
+                                </span>
+                                <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="confirmBookingBtn">Confirm</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-            <!-- Appointment Date -->
-            <div class="col-12 mb-2">
-                <label for="appointment_date" class="form-label small">Appointment Date</label>
-                <input type="datetime-local" class="form-control form-control-sm" id="appointment_date" name="appointment_date" required>
-                <div class="invalid-feedback small">Please select an appointment date</div>
-            </div>
-
-            <!-- Notes -->
-            <div class="col-12 mb-2">
-                <label for="notes" class="form-label small">Additional Notes</label>
-                <textarea class="form-control form-control-sm" id="notes" name="notes" rows="2" placeholder="Optional notes"></textarea>
-            </div>
-
-            <!-- Coupon Code -->
-            <div class="col-12 mb-2">
-                <label for="coupon_code" class="form-label small">Coupon Code</label>
-                <div class="input-group input-group-sm">
-                    <input type="text" class="form-control form-control-sm" id="coupon_code" name="coupon_code" placeholder="Enter coupon code">
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="apply-coupon">Apply</button>
-                </div>
-            </div>
-
-            <!-- Coupon Notification -->
-            <div id="coupon-notification" class="col-12 mb-2" style="display: none;">
-                <div class="alert alert-success alert-sm d-flex justify-content-between align-items-center p-2">
-                    <span class="small">
-                        Coupon applied! Discount: $<span id="discount-amount"></span>
-                    </span>
-                    <button type="button" class="btn btn-danger btn-sm" id="remove-coupon">Remove</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-footer py-2">
-        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary btn-sm" id="confirmBookingBtn">Confirm</button>
-    </div>
-</form>
-        </div>
-    </div>
-</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
     // If the user is not logged in, show a notification before redirecting to login
     document.querySelectorAll('.btn-book-now').forEach(button => {
@@ -167,68 +168,67 @@
             document.getElementById('package_id').value = this.getAttribute('data-package-id');
             originalPrice = parseFloat(packagePrice); // Store the original price
             document.getElementById('original_price').value = originalPrice.toFixed(2);
-
         });
     });
+
     document.getElementById('confirmBookingBtn').addEventListener('click', function(e) {
-    e.preventDefault(); // Prevent form submission to manually validate
+        e.preventDefault(); // Prevent form submission to manually validate
 
-    // Validate the form fields
-    const doctorId = document.getElementById('doctor_id').value;
-    const appointmentDate = document.getElementById('appointment_date').value;
-    const price = parseFloat(document.getElementById('price').value);
+        // Validate the form fields
+        const doctorId = document.getElementById('doctor_id').value;
+        const appointmentDate = document.getElementById('appointment_date').value;
+        const price = parseFloat(document.getElementById('price').value);
 
-    // Get current date and time
-    const currentDate = new Date();
-    const selectedDate = new Date(appointmentDate);
+        // Get current date and time
+        const currentDate = new Date();
+        const selectedDate = new Date(appointmentDate);
 
-    if (!doctorId) {
-        Swal.fire("Error", "Please select a doctor.", "error");
-        return;
-    }
-
-    if (!appointmentDate) {
-        Swal.fire("Error", "Please select an appointment date.", "error");
-        return;
-    }
-
-    // Check if the selected appointment date is in the past
-    if (selectedDate <= currentDate) {
-        Swal.fire("Error", "You cannot select a past date. Please choose a future date and time.", "error");
-        return;
-    }
-
-    if (isNaN(price) || price <= 0) {
-        Swal.fire("Error", "Price is invalid.", "error");
-        return;
-    }
-
-    // Show SweetAlert confirmation dialog before submitting
-    Swal.fire({
-        title: 'Are you sure?',
-        text: "Do you want to confirm this booking?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, confirm it!',
-        cancelButtonText: 'Cancel'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            // If confirmed, show a success message
-            Swal.fire({
-                title: 'Booking Confirmed!',
-                text: "Your appointment has been successfully booked.",
-                icon: 'success',
-                confirmButtonText: 'Okay'
-            }).then(() => {
-                // After "Okay" is clicked, submit the form
-                document.getElementById('bookingForm').submit();
-            });
+        if (!doctorId) {
+            Swal.fire("Error", "Please select a doctor.", "error");
+            return;
         }
-    });
-});
 
+        if (!appointmentDate) {
+            Swal.fire("Error", "Please select an appointment date.", "error");
+            return;
+        }
+
+        // Check if the selected appointment date is in the past
+        if (selectedDate <= currentDate) {
+            Swal.fire("Error", "You cannot select a past date. Please choose a future date and time.", "error");
+            return;
+        }
+
+        if (isNaN(price) || price <= 0) {
+            Swal.fire("Error", "Price is invalid.", "error");
+            return;
+        }
+
+        // Show SweetAlert confirmation dialog before submitting
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "Do you want to confirm this booking?",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, confirm it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // If confirmed, show a success message
+                Swal.fire({
+                    title: 'Booking Confirmed!',
+                    text: "Your appointment has been successfully booked.",
+                    icon: 'success',
+                    confirmButtonText: 'Okay'
+                }).then(() => {
+                    // After "Okay" is clicked, submit the form
+                    document.getElementById('bookingForm').submit();
+                });
+            }
+        });
+    });
 
     // Apply Coupon Functionality with SweetAlert confirmation
     document.getElementById('apply-coupon').addEventListener('click', function() {
@@ -294,7 +294,6 @@
                 document.getElementById('price').value = originalPrice.toFixed(2);
 
                 // Hide the coupon notification and show the "Apply" button again
-                
                 document.getElementById('coupon-notification').style.display = 'none';
                 document.getElementById('apply-coupon').style.display = 'inline-block';
                 document.getElementById('remove-coupon').style.display = 'none';
@@ -303,8 +302,8 @@
     });
 </script>
 
-
 @endsection
+
 <style>
 .block-7 {
     border-radius: 8px;
@@ -326,30 +325,8 @@
     border-bottom: none;
 }
 
-.price {
-    font-size: 2.5rem;
-    font-weight: bold;
-    color: #000;
-    display: block;
-}
-
-.price sup {
-    font-size: 1rem;
-    top: -1.2em;
-}
-
-.price sub {
-    font-size: 0.8rem;
-    color: #6c757d;
-}
-
-.excerpt {
-    font-size: 1.1rem;
-    color: #6c757d;
-}
-
-.row.g-4 {
-    --bs-gutter-x: 1.5rem;
-    --bs-gutter-y: 1.5rem;
+#coupon-notification {
+    padding: 10px;
+    margin-top: 10px;
 }
 </style>

@@ -13,13 +13,15 @@ class IsDoctor
      *
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle($request, Closure $next)
+    public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->role != 3) {
-            return redirect('/home')->with('error', 'Unauthorized');
+        // Check if the authenticated user's role is 'doctor' (role ID: 3)
+        if (auth()->check() && auth()->user()->role == 3) {
+            return $next($request); // Allow access for doctors
         }
-    
-        return $next($request);
+
+        // Deny access to unauthorized users
+        abort(403, 'Unauthorized access');
     }
     
 }

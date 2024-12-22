@@ -24,29 +24,27 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        // Validate login credentials
-        $credentials = $request->validated();
-        $user = User::where('email', $credentials['email'])->first();
-
-        // Check if user exists and is inactive
-        if ($user && $user->status === 'inactive') {
-            return back()->withErrors([
-                'email' => 'Your account has been deactivated. Please contact support.'
-            ]);
-        }   
-
-        // Authenticate user if the account is active
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-            return redirect()->intended(RouteServiceProvider::HOME);
-        }
-
-        // If authentication fails, redirect back with an error message
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.'
+        $request->validate([
+            'email' => ['required', 'string', 'email'],
+            'password' => ['required', 'string'],
         ]);
+    
+        if (!Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
+            return back()->withErrors(['email' => __('auth.failed')]);
+        }
+    
+        $request->session()->regenerate();
+    
+        $user = Auth::user();
+    
+        // Redirect based on user role
+        if ($user->role == 3) { // Doctor role
+            return redirect()->route('doctor.dashboard'); // Redirect doctor to their dashboard
+        }
+    
+        return redirect(RouteServiceProvider::HOME); // Default redirection for other users
     }
 
     /**

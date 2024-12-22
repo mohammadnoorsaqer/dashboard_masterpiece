@@ -37,6 +37,18 @@ class UserAppointmentController extends Controller
             'notes' => 'nullable|string',
         ]);
     
+        // Check if the user already has a booked appointment for the same doctor and package
+        $existingAppointment = Appointment::where('user_id', $validated['user_id'])
+            ->where('doctor_id', $validated['doctor_id'])
+            ->where('package_id', $validated['package_id'])
+            ->where('status', '!=', 'completed') // Ensure it's not completed
+            ->first();
+    
+            if ($existingAppointment) {
+                // Return a JSON response indicating the booking already exists
+                return response()->json(['error' => 'You already have an active appointment for this doctor and package. Please complete or cancel it before booking again.'], 400);
+            }
+    
         // Create new appointment
         $appointment = new Appointment();
         $appointment->user_id = $validated['user_id'];
@@ -48,7 +60,8 @@ class UserAppointmentController extends Controller
         $appointment->discount_amount = $validated['discount_amount'] ?? 0;
         $appointment->coupon_id = $validated['coupon_id'] ?? null;
         $appointment->notes = $validated['notes'] ?? null;
-        
+        $appointment->status = 'booked'; // Default to "booked" status
+    
         // Save the appointment to the database
         $appointment->save();
     
