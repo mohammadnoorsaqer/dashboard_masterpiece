@@ -179,6 +179,58 @@
         margin-bottom: 2rem;
     }
 
+    .appointment-card {
+        background-color: white;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+
+    .appointment-card:hover {
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+    }
+
+    .appointment-info {
+        margin-bottom: 0.5rem;
+        color: #4a5568;
+    }
+
+    .appointment-status {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: capitalize;
+    }
+
+    .status-completed {
+        background-color: #d1fae5;
+        color: #059669;
+    }
+
+    .status-pending {
+        background-color: #fef3c7;
+        color: #d97706;
+    }
+
+    .review-link {
+        display: inline-block;
+        margin-top: 1rem;
+        color: #589167;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .review-link:hover {
+        color: #4a7b57;
+        text-decoration: underline;
+    }
+
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(5px); }
         to { opacity: 1; transform: translateY(0); }
@@ -217,6 +269,9 @@
             </li>
             <li class="nav-item" data-section="password">
                 <i class="fas fa-lock"></i> Change Password
+            </li>
+            <li class="nav-item" data-section="appointments">
+                <i class="fas fa-calendar-alt"></i> Your Appointments
             </li>
             <div class="nav-separator"></div>
             <li class="nav-item">
@@ -272,21 +327,37 @@
                 </form>
             </div>
         </div>
+
+        <div id="appointments" class="content-section">
+            <h2 class="section-title">Your Appointments</h2>
+            @foreach($appointments as $appointment)
+                <div class="appointment-card">
+                    <div class="appointment-info">
+                        <strong>Doctor:</strong> {{ $appointment->doctor->name }}
+                    </div>
+                    <div class="appointment-info">
+                        <strong>Package:</strong> {{ $appointment->package->name }}
+                    </div>
+                    <div class="appointment-info">
+                        <strong>Appointment Date:</strong> {{ $appointment->appointment_date }}
+                    </div>
+                    <div class="appointment-info">
+                        <strong>Status:</strong> 
+                        <span class="appointment-status status-{{ $appointment->status }}">
+                            {{ ucfirst($appointment->status) }}
+                        </span>
+                    </div>
+                    @if($appointment->status === 'completed')
+                        <a href="{{ route('reviews.create', $appointment->id) }}" class="review-link">
+                            <i class="fas fa-star"></i> Add a Review
+                        </a>
+                    @endif
+                </div>
+            @endforeach
+        </div>
     </div>
 </div>
-<h2>Your Appointments</h2>
-    @foreach($appointments as $appointment)
-        <div class="appointment">
-            <p>Doctor: {{ $appointment->doctor->name }}</p>
-            <p>Package: {{ $appointment->package->name }}</p>
-            <p>Appointment Date: {{ $appointment->appointment_date }}</p>
-            <p>Status: {{ ucfirst($appointment->status) }}</p> <!-- Show status -->
 
-            @if($appointment->status === 'completed')
-                <a href="{{ route('reviews.create', $appointment->id) }}">Add a Review</a>
-            @endif
-        </div>
-    @endforeach
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -294,10 +365,12 @@
     $(document).ready(function() {
         $('.nav-item').on('click', function() {
             var target = $(this).data('section');
-            $('.nav-item').removeClass('active');
-            $(this).addClass('active');
-            $('.content-section').removeClass('active');
-            $('#' + target).addClass('active');
+            if (target) {
+                $('.nav-item').removeClass('active');
+                $(this).addClass('active');
+                $('.content-section').removeClass('active');
+                $('#' + target).addClass('active');
+            }
         });
 
         $('#profile-form').submit(function(e) {
@@ -312,7 +385,7 @@
                 confirmButtonText: 'Yes, save changes!',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.submit(); // Submit the form if confirmed
+                    this.submit();
                 }
             });
         });
@@ -329,7 +402,7 @@
                 confirmButtonText: 'Yes, change password!',
             }).then((result) => {
                 if (result.isConfirmed) {
-                    this.submit(); // Submit the form if confirmed
+                    this.submit();
                 }
             });
         });
