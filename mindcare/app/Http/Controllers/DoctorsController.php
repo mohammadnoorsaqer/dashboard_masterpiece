@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 use App\Models\Appointment;
 use App\Models\Doctor;
 use Illuminate\Http\Request;
+use App\Models\Review; 
+
 
 class DoctorsController extends Controller
 {
@@ -72,4 +74,15 @@ class DoctorsController extends Controller
         // Redirect with success message and updated appointments
         return redirect()->route('doctor.dashboard')->with('appointments', $appointments)->with('success', 'Appointment status updated successfully!');
     }
+    public function getDoctorReviews($doctorId)
+    {
+        // Fetch reviews for the given doctor ID
+        $reviews = Review::where('doctor_id', $doctorId)->get();
+
+        // Return reviews as JSON
+        return response()->json([
+            'reviews' => $reviews
+        ]);
+    }
+    
 }

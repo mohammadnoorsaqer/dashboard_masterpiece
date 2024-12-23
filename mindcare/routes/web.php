@@ -83,8 +83,17 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 
 
 Route::get('/', function () {
-    return view('user.home');
+    $reviews = DB::table('reviews')
+    ->join('users', 'reviews.user_id', '=', 'users.id') // Join reviews with users
+    ->where('reviews.rating', '>=', 4) // Filter reviews with rating 4 or higher
+    ->where('reviews.status', '!=', 'pending') // Exclude reviews with 'pending' status
+    ->select('users.name as user_name', 'reviews.comments') // Select user name and comments
+    ->get();
+
+return view('user.home', compact('reviews'));
+
 });
+Route::get('/api/doctors/{doctorId}/reviews', [DoctorsController::class, 'getDoctorReviews']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -97,11 +106,12 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/home', function () {
     $reviews = DB::table('reviews')
-                ->join('users', 'reviews.user_id', '=', 'users.id') // Join reviews with users
-                ->where('reviews.rating', '>=', 4) // Filter reviews with rating 4 or 5
-                ->where('reviews.status', '!=', 'pending') // Exclude reviews with 'pending' status
-                ->select('users.name as user_name', 'reviews.comments') // Select name and comments
-                ->get();
+        ->join('users', 'reviews.user_id', '=', 'users.id') // Join reviews with users
+        ->where('reviews.rating', '>=', 4) // Filter reviews with rating 4 or higher
+        ->where('reviews.status', '!=', 'pending') // Exclude reviews with 'pending' status
+        ->select('users.name as user_name', 'reviews.comments') // Select user name and comments
+        ->get();
+
     return view('user.home', compact('reviews'));
 })->name('home');
 
