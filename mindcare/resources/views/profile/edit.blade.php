@@ -379,33 +379,45 @@
                 </form>
             </div>
         </div>
-
         <div id="appointments" class="content-section">
-            <h2 class="section-title">Your Appointments</h2>
+    <h2 class="section-title mb-4">Your Appointments</h2>
+    <div class="appointments-container">
+        <div class="appointments-grid" id="appointmentsGrid">
             @foreach($appointments as $appointment)
-                <div class="appointment-card">
-                    <div class="appointment-info">
-                        <strong>Doctor:</strong> {{ $appointment->doctor->name }}
-                    </div>
-                    <div class="appointment-info">
-                        <strong>Package:</strong> {{ $appointment->package->name }}
-                    </div>
-                    <div class="appointment-info">
-                        <strong>Appointment Date:</strong> {{ $appointment->appointment_date }}
-                    </div>
-                    <div class="appointment-info">
-                        <strong>Status:</strong> 
+                <div class="appointment-card" data-index="{{ $loop->index }}">
+                    <div class="appointment-header">
+                        <div class="doctor-info">
+                            <i class="fas fa-user-md"></i>
+                            <span>{{ $appointment->doctor->name }}</span>
+                        </div>
                         <span class="appointment-status status-{{ $appointment->status }}">
                             {{ ucfirst($appointment->status) }}
                         </span>
                     </div>
+                    <div class="appointment-body">
+                        <div class="appointment-info">
+                            <i class="fas fa-box"></i>
+                            <span>{{ $appointment->package->name }}</span>
+                        </div>
+                        <div class="appointment-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{{ $appointment->appointment_date }}</span>
+                        </div>
+                    </div>
                     @if($appointment->status === 'completed')
-                        <a href="javascript:void(0);" class="review-link" onclick="openReviewModal({{ $appointment->id }})">
-                            <i class="fas fa-star"></i> Add a Review
-                        </a>
+                        <div class="appointment-footer">
+                            <button class="review-btn" onclick="openReviewModal({{ $appointment->id }})">
+                                <i class="fas fa-star"></i> Add Review
+                            </button>
+                        </div>
                     @endif
                 </div>
             @endforeach
+        </div>
+        <div class="text-center mt-4" id="showMoreContainer">
+            <button id="showMoreBtn" class="show-more-btn">
+                Show More <i class="fas fa-chevron-down"></i>
+            </button>
         </div>
     </div>
 </div>
@@ -440,7 +452,243 @@
         </form>
     </div>
 </div>
+<!-- Updated Appointments Section HTML -->
+<div id="appointments" class="content-section">
+    <h2 class="section-title mb-4">Your Appointments</h2>
+    <div class="appointments-container">
+        <div class="appointments-grid" id="appointmentsGrid">
+            @foreach($appointments as $appointment)
+                <div class="appointment-card" data-index="{{ $loop->index }}">
+                    <div class="appointment-header">
+                        <div class="doctor-info">
+                            <i class="fas fa-user-md"></i>
+                            <span>{{ $appointment->doctor->name }}</span>
+                        </div>
+                        <span class="appointment-status status-{{ $appointment->status }}">
+                            {{ ucfirst($appointment->status) }}
+                        </span>
+                    </div>
+                    <div class="appointment-body">
+                        <div class="appointment-info">
+                            <i class="fas fa-box"></i>
+                            <span>{{ $appointment->package->name }}</span>
+                        </div>
+                        <div class="appointment-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>{{ $appointment->appointment_date }}</span>
+                        </div>
+                    </div>
+                    @if($appointment->status === 'completed')
+                        <div class="appointment-footer">
+                            <button class="review-btn" onclick="openReviewModal({{ $appointment->id }})">
+                                <i class="fas fa-star"></i> Add Review
+                            </button>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+        <div class="text-center mt-4" id="showMoreContainer">
+            <button id="showMoreBtn" class="show-more-btn">
+                Show More <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+</div>
 
+<style>
+.appointments-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.appointments-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.appointment-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    display: none; /* Hidden by default */
+}
+
+.appointment-card.visible {
+    display: block;
+    animation: fadeIn 0.3s ease forwards;
+}
+
+.appointment-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-header {
+    padding: 15px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.doctor-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+}
+
+.doctor-info i {
+    color: #2C3E50;
+}
+
+.appointment-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.status-completed {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-pending {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+.status-cancelled {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.appointment-body {
+    padding: 15px;
+}
+
+.appointment-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.appointment-info i {
+    color: #6c757d;
+    width: 20px;
+}
+
+.appointment-footer {
+    padding: 15px;
+    border-top: 1px solid #f0f0f0;
+    text-align: right;
+}
+
+.review-btn {
+    background: #589167;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+
+
+.show-more-btn {
+    background: transparent;
+    border: 2px solid #589167;
+    color: #589167;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 auto;
+}
+
+.show-more-btn:hover {
+    background:#589167;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .appointments-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const appointmentsPerPage = 3;
+    const appointmentCards = document.querySelectorAll('.appointment-card');
+    const showMoreBtn = document.getElementById('showMoreBtn');
+    let isExpanded = false;
+
+    // Initially show only first set of appointments
+    function initializeAppointments() {
+        appointmentCards.forEach((card, index) => {
+            if (index < appointmentsPerPage) {
+                card.classList.add('visible');
+            } else {
+                card.classList.remove('visible');
+            }
+        });
+    }
+
+    // Toggle between showing all and showing limited appointments
+    function toggleAppointments() {
+        if (!isExpanded) {
+            // Show all appointments
+            appointmentCards.forEach(card => card.classList.add('visible'));
+            showMoreBtn.innerHTML = 'Show Less <i class="fas fa-chevron-up"></i>';
+            isExpanded = true;
+        } else {
+            // Show only first set of appointments
+            appointmentCards.forEach((card, index) => {
+                if (index >= appointmentsPerPage) {
+                    card.classList.remove('visible');
+                }
+            });
+            showMoreBtn.innerHTML = 'Show More <i class="fas fa-chevron-down"></i>';
+            isExpanded = false;
+        }
+    }
+
+    // Hide "Show More" button if there are fewer appointments than the limit
+    if (appointmentCards.length <= appointmentsPerPage) {
+        showMoreBtn.style.display = 'none';
+    }
+
+    showMoreBtn.addEventListener('click', toggleAppointments);
+    
+    // Initialize the view
+    initializeAppointments();
+});
+</script>
 <style>
 /* Modal Styles */
 .modal {

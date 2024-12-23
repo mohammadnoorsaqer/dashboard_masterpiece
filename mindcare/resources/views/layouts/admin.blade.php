@@ -156,9 +156,7 @@
                                 <span>{{ auth()->user()->name }}</span>
                                 </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profile</a></li>
-                                <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Settings</a></li>
-                                <li><hr class="dropdown-divider"></li>
+        
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}" class="px-0">
                                         @csrf

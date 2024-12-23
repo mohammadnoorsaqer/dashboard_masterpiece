@@ -129,21 +129,12 @@
                 <!-- Top Navigation -->
                 <nav class="navbar navbar-expand-lg navbar-light bg-white mb-4 rounded shadow-sm">
                     <div class="container-fluid">
-                        <form class="d-flex me-auto">
-                            <input class="form-control" type="search" placeholder="Search">
-                        </form>
+ 
                         <div class="dropdown">
                             <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> Admin
-                            </button>
+                            <i class="fas fa-user-circle me-2"></i>
+                            <span>{{ auth()->user()->name }}</span>                            </button>
                             <ul class="dropdown-menu dropdown-menu-end">
-    <li><a class="dropdown-item" href="#profile">
-        <i class="bi bi-person me-2"></i>Profile
-    </a></li>
-    <li><a class="dropdown-item" href="#settings">
-        <i class="bi bi-gear me-2"></i>Settings
-    </a></li>
-    <li><hr class="dropdown-divider"></li>
     @if (Route::has('login'))
         @auth
 
@@ -326,3 +317,193 @@
 </body>
 
 </html>
+<style>
+    /* Base Layout */
+body {
+    background-color: #f8f9fa;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Sidebar Refinements */
+.sidebar {
+    min-height: 100vh;
+    background: #2C3E50;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .nav-link {
+    color: #fff;
+    padding: 12px 20px;
+    margin: 4px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.sidebar .nav-link:hover {
+    background: #34495E;
+    transform: translateX(5px);
+}
+
+.sidebar .nav-link.active {
+    background: #34495E;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar .nav-link i {
+    width: 24px;
+    text-align: center;
+    margin-right: 8px;
+}
+
+/* Main Content Area */
+.main-content {
+    background: #f8f9fa;
+    padding: 20px !important;
+}
+
+/* Top Navigation */
+.navbar {
+    padding: 15px 25px;
+    background: white !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05) !important;
+    border-radius: 12px !important;
+    margin-bottom: 25px !important;
+}
+
+.navbar .container-fluid {
+    justify-content: flex-end;
+}
+
+
+
+.navbar .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 8px;
+    min-width: 200px;
+}
+
+.navbar .dropdown-item {
+    padding: 8px 16px;
+    border-radius: 6px;
+    transition: background 0.2s ease;
+}
+
+.navbar .dropdown-item i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+}
+
+/* Stats Cards Refinements */
+.stat-card {
+    border: none !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.stat-card .card-body {
+    padding: 1.5rem;
+    position: relative;
+}
+
+.stat-card i {
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.stat-card h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.stat-card h3 {
+    font-weight: 700;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Charts Row Improvements */
+.charts-row {
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.chart-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+    height: 100%;
+}
+
+.chart-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.chart-card .card-header {
+    padding: 16px 20px;
+    background: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 12px 12px 0 0;
+}
+
+.chart-card .card-header h5 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.chart-card .card-header h5 i {
+    margin-right: 10px;
+}
+
+.chart-card .card-body {
+    padding: 20px;
+}
+
+.chart-container {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+    .charts-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        margin-bottom: 15px;
+    }
+}
+
+/* Additional Utility Classes */
+.shadow-hover {
+    transition: box-shadow 0.2s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.text-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+</style>
