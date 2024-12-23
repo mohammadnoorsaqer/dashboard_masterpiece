@@ -29,6 +29,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Middleware\IsUser;
 use App\Models\Doctor;
+use App\Models\Review;
 
 use App\Http\Controllers\Admin\CommentController;
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -95,7 +96,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 Route::get('/home', function () {
-    return view('user.home');
+    $reviews = DB::table('reviews')
+                ->join('users', 'reviews.user_id', '=', 'users.id') // Join reviews with users
+                ->where('reviews.rating', '>=', 4) // Filter reviews with rating 4 or 5
+                ->where('reviews.status', '!=', 'pending') // Exclude reviews with 'pending' status
+                ->select('users.name as user_name', 'reviews.comments') // Select name and comments
+                ->get();
+    return view('user.home', compact('reviews'));
 })->name('home');
 
 Route::get('/about', function () {
