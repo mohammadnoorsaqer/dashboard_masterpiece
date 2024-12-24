@@ -338,24 +338,40 @@
     </div>
 
     <div class="main-content">
-        <div id="profile" class="content-section active">
-            <h2 class="section-title">Profile Information</h2>
-            <div class="profile-card">
-                <form method="post" action="{{ route('profile.update') }}" id="profile-form">
-                    @csrf
-                    @method('patch')
-                    <div class="form-group">
-                        <label class="form-label">Name</label>
-                        <input type="text" name="name" class="form-input" value="{{ old('name', $user->name) }}">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Email</label>
-                        <input type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}">
-                    </div>
-                    <button type="submit" class="btn" id="save-profile">Save Changes</button>
-                </form>
+    <div id="profile" class="content-section active">
+    <h2 class="section-title">Profile Information</h2>
+    <div class="profile-card">
+        <form method="post" action="{{ route('profile.update') }}" id="profile-form" enctype="multipart/form-data">
+            @csrf
+            @method('patch')
+
+            <!-- Name Field -->
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <input type="text" name="name" class="form-input" value="{{ old('name', $user->name) }}">
             </div>
-        </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <input type="email" name="email" class="form-input" value="{{ old('email', $user->email) }}">
+            </div>
+
+            <!-- Profile Image Field -->
+            <div class="form-group">
+    <label class="form-label">Profile Image</label>
+    <input type="file" name="profile_image" class="form-input" accept="image/*">
+    @if($user->profile_image)
+        <img src="{{ asset('storage/' . $user->profile_image) }}" alt="Profile Image" width="100" height="100">
+    @endif
+</div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn" id="save-profile">Save Changes</button>
+        </form>
+    </div>
+</div>
+
 
         <div id="password" class="content-section">
             <h2 class="section-title">Change Password</h2>

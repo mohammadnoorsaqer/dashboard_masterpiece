@@ -27,6 +27,8 @@ class User extends Authenticatable
         'email',
         'password',
         'role', // Add 'role' to the mass-assignable attributes
+        
+        'image'
     ];
 
     /**

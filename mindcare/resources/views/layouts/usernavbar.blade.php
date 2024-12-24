@@ -43,7 +43,11 @@
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <i class="bi bi-person-circle"></i> {{ Auth::user()->name }}
+                            @if(Auth::user()->image)
+                                <img src="{{ asset('images/' . Auth::user()->image) }}" alt="Profile Image" class="navbar-profile-image">
+                            @else
+                                <i class="bi bi-person-circle"></i> {{ Auth::user()->name }}
+                            @endif
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="{{ route('profile.edit') }}">
@@ -63,3 +67,22 @@
         </div>
     </div>
 </nav>
+<style>
+.navbar-profile-image {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #01d28e;
+    transition: all 0.3s ease;
+}
+
+.navbar-profile-image:hover {
+    transform: scale(1.1);
+    border-color: #00b377;
+}
+.bi-person-circle {
+    font-size: 20px;
+    margin-right: 5px;
+}
+</style>
