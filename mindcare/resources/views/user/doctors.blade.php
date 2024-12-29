@@ -239,7 +239,6 @@
     }
 }
 </style>
-
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const doctorImages = document.querySelectorAll('.doctor-image');
