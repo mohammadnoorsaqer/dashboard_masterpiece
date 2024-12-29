@@ -26,12 +26,14 @@ class ReviewController extends Controller
     // Store the submitted review
     public function store(Request $request)
     {
+        // Validate the incoming request
         $request->validate([
             'appointment_id' => 'required|exists:appointments,id',
             'comments' => 'required|string|max:500',
             'rating' => 'required|integer|min:1|max:5',
         ]);
     
+        // Fetch the appointment based on the provided appointment ID
         $appointment = Appointment::findOrFail($request->appointment_id);
     
         // Ensure the user is the one who booked the appointment
@@ -48,17 +50,28 @@ class ReviewController extends Controller
             return redirect()->route('home')->with('error', 'You have already submitted a review for this appointment.');
         }
     
-        // Create the review
-        $review = new Review();
-        $review->appointment_id = $request->appointment_id;
-        $review->user_id = auth()->id();
-        $review->comments = $request->comments;
-        $review->rating = $request->rating;
-        $review->status = 'pending';
-        $review->save();
+        // Get the doctor ID from the appointment (assuming the appointment has a doctor_id field)
+        $doctor_id = $appointment->doctor_id;
     
-        return redirect()->route('home')->with('success', 'Your review has been submitted.');
+        // Create the review
+        try {
+            $review = new Review();
+            $review->appointment_id = $request->appointment_id;
+            $review->user_id = auth()->id();
+            $review->doctor_id = $doctor_id;  // Store the doctor ID in the review
+            $review->comments = $request->comments;
+            $review->rating = $request->rating;
+            $review->status = 'pending';  // Default status
+            $review->save();
+    
+            return redirect()->route('home')->with('success', 'Your review has been submitted.');
+        } catch (\Exception $e) {
+            \Log::error('Error saving review: ' . $e->getMessage());
+            return redirect()->route('home')->with('error', 'There was an issue submitting your review. Please try again.');
+        }
     }
+    
+    
     // Resolve or mark the review as unresolved
     public function update(Request $request, $review_id)
     {
